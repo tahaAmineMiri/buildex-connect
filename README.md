@@ -125,4 +125,4 @@ Models the system’s structure, including users, products, subscriptions, and a
 #### 5.2 Class Diagram
 
 **Visual Representation**:  
-[View UML Class Diagram here](#)
+[View UML Class Diagram here](https://drive.google.com/file/d/1kt56xgGTW-o_9ut7zXexrEE6qr1CUITJ/view?usp=sharing)
