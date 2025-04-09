@@ -10,7 +10,7 @@ There are several ways of editing your application.
 
 **Use your preferred IDE**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+If you want to work locally using your own IDE, you can clone this repo and push changes.
 
 The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
@@ -162,15 +162,31 @@ This document outlines the requirements for InCon, a B2B marketplace connecting 
 ### 4.4 User Registration and Subscription Flow
 
 - After receiving the verification email, the user can:
-  - Subscribe to access purchasing functionality.
-- Two subscription models are available:
-  - **Monthly/Annual subscription**: $400 per year.
-  - **Per-product subscription**: The platform takes a commission based on a recommended percentage per product sold.
-- **Payment Process:**
-  - In some cases, payment will be manual. The buyer will use the company's bank information from the website and process the transaction manually through their bank.
-  - Once the payment is received, the admin is responsible for manually verifying and confirming the transaction within the platform.
+  - Subscribe to access purchasing functionality Or Adding Products in the platform.
 
----
+### 4.5 Subscription and Payment
+
+##### Subscription for Sellers
+
+• Two plans:
+
+- Monthly/Annual Subscription: $400 per year
+- Commission per product: A predefined percentage is taken from each sale.
+
+##### Subscription for Buyers
+
+• Commission per transaction: Based on several criteria:
+
+- Number of products purchased
+- Location
+- Transportation
+
+##### Manual Payment (Buyers only)
+
+• In certain cases, payment is made manually:
+
+- The buyer uses the bank details available on the website.
+- Once the transfer is made, the admin manually validates the transaction on the platform.
 
 ### 🛠️ Admin Panel Functionalities
 
