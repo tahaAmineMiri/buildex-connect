@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Facebook, Linkedin, Google } from "lucide-react";
+import { Facebook, Linkedin, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -16,9 +16,9 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen grid grid-cols-2">
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
       {/* Left side - Sign In */}
-      <div className="bg-white p-12 flex flex-col justify-center items-center">
+      <div className="bg-white p-8 md:p-12 flex flex-col justify-center items-center">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -35,7 +35,7 @@ const AuthPage = () => {
               <Facebook className="w-4 h-4" />
             </Button>
             <Button variant="outline" size="icon">
-              <Google className="w-4 h-4" />
+              <Mail className="w-4 h-4" />
             </Button>
             <Button variant="outline" size="icon">
               <Linkedin className="w-4 h-4" />
@@ -64,7 +64,7 @@ const AuthPage = () => {
       </div>
 
       {/* Right side - Sign Up Overlay */}
-      <div className="bg-purple-600 text-white p-12 flex flex-col justify-center items-center relative overflow-hidden">
+      <div className="bg-purple-600 text-white p-8 md:p-12 flex flex-col justify-center items-center relative overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={isSignUp ? "signup" : "welcome"}
