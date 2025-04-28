@@ -64,7 +64,7 @@ const AuthPage = () => {
       </div>
 
       {/* Right side - Sign Up Overlay */}
-      <div className="bg-purple-600 text-white p-8 md:p-12 flex flex-col justify-center items-center relative overflow-hidden">
+      <div className="bg-construction-blue text-white p-8 md:p-12 flex flex-col justify-center items-center relative overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={isSignUp ? "signup" : "welcome"}
@@ -72,12 +72,12 @@ const AuthPage = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
-            className="w-full max-w-md text-center space-y-6"
+            className="w-full max-w-md text-center space-y-6 relative z-10"
           >
             {isSignUp ? (
               <>
                 <h2 className="text-3xl font-bold">Create Account</h2>
-                <p className="text-purple-200">
+                <p className="text-construction-white/90">
                   Enter your personal details to start your journey with us
                 </p>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -102,7 +102,7 @@ const AuthPage = () => {
                   <Button
                     type="submit"
                     variant="outline"
-                    className="w-full border-white text-white hover:bg-white hover:text-purple-600"
+                    className="w-full border-white text-white hover:bg-white hover:text-construction-blue"
                   >
                     Sign up
                   </Button>
@@ -118,12 +118,12 @@ const AuthPage = () => {
             ) : (
               <>
                 <h2 className="text-3xl font-bold">Hello, Friend!</h2>
-                <p className="text-purple-200">
+                <p className="text-construction-white/90">
                   Enter your personal details and start your journey with us
                 </p>
                 <Button
                   variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-purple-600"
+                  className="border-white text-white hover:bg-white hover:text-construction-blue"
                   onClick={toggleForm}
                 >
                   Sign up
@@ -145,7 +145,7 @@ const AuthPage = () => {
               repeat: Infinity,
               ease: "linear",
             }}
-            className="absolute -top-1/2 -right-1/2 w-full h-full bg-purple-400/20 rounded-full blur-3xl"
+            className="absolute -top-1/2 -right-1/2 w-full h-full bg-construction-slate/20 rounded-full blur-3xl"
           />
           <motion.div
             animate={{
@@ -157,7 +157,7 @@ const AuthPage = () => {
               repeat: Infinity,
               ease: "linear",
             }}
-            className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-purple-600/20 rounded-full blur-3xl"
+            className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-construction-blue/20 rounded-full blur-3xl"
           />
         </div>
       </div>
