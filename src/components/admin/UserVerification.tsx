@@ -1,15 +1,12 @@
-
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { User } from "@/types/admin";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 import { Check, X } from "lucide-react";
 
-// Mock function to fetch users
 const fetchUsers = async (): Promise<User[]> => {
-  // In a real implementation, this would make an API call
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve([
@@ -54,9 +51,7 @@ const fetchUsers = async (): Promise<User[]> => {
   });
 };
 
-// Mock function to verify user
 const verifyUser = async (userId: number): Promise<{ success: boolean, message: string }> => {
-  // In a real implementation, this would make an API call
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
@@ -67,9 +62,7 @@ const verifyUser = async (userId: number): Promise<{ success: boolean, message: 
   });
 };
 
-// Mock function to unverify user
 const unverifyUser = async (userId: number): Promise<{ success: boolean, message: string }> => {
-  // In a real implementation, this would make an API call
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({

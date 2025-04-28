@@ -1,15 +1,12 @@
-
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Payment } from "@/types/admin";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 import { Check, X } from "lucide-react";
 
-// Mock function to fetch pending payments
 const fetchPendingPayments = async (): Promise<Payment[]> => {
-  // In a real implementation, this would make an API call
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve([
@@ -45,9 +42,7 @@ const fetchPendingPayments = async (): Promise<Payment[]> => {
   });
 };
 
-// Mock function to verify payment
 const verifyPayment = async (paymentId: number): Promise<Payment> => {
-  // In a real implementation, this would make an API call
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
@@ -63,9 +58,7 @@ const verifyPayment = async (paymentId: number): Promise<Payment> => {
   });
 };
 
-// Mock function to reject payment
 const rejectPayment = async (paymentId: number): Promise<Payment> => {
-  // In a real implementation, this would make an API call
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({

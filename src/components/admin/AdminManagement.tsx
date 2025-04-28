@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AdminResponse, AdminRequest } from "@/types/admin";
@@ -8,11 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Edit, Trash2, Eye } from "lucide-react";
 import AdminForm from "./AdminForm";
 import AdminDetails from "./AdminDetails";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
-// Mock function to fetch admins
 const fetchAdmins = async (): Promise<AdminResponse[]> => {
-  // In a real implementation, this would make an API call
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve([
@@ -35,9 +32,7 @@ const fetchAdmins = async (): Promise<AdminResponse[]> => {
   });
 };
 
-// Mock function to create admin
 const createAdmin = async (admin: AdminRequest): Promise<AdminResponse> => {
-  // In a real implementation, this would make an API call
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
@@ -51,9 +46,7 @@ const createAdmin = async (admin: AdminRequest): Promise<AdminResponse> => {
   });
 };
 
-// Mock function to update admin
 const updateAdmin = async (adminId: number, admin: AdminRequest): Promise<AdminResponse> => {
-  // In a real implementation, this would make an API call
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
@@ -67,9 +60,7 @@ const updateAdmin = async (adminId: number, admin: AdminRequest): Promise<AdminR
   });
 };
 
-// Mock function to delete admin
 const deleteAdmin = async (adminId: number): Promise<{ success: boolean, message: string }> => {
-  // In a real implementation, this would make an API call
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({

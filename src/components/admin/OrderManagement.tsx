@@ -1,15 +1,12 @@
-
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Order } from "@/types/admin";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
-// Mock function to fetch orders
 const fetchOrders = async (): Promise<Order[]> => {
-  // In a real implementation, this would make an API call
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve([
@@ -50,9 +47,7 @@ const fetchOrders = async (): Promise<Order[]> => {
   });
 };
 
-// Mock function to update order status
 const updateOrderStatus = async (orderId: number, newStatus: string): Promise<Order> => {
-  // In a real implementation, this would make an API call
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
