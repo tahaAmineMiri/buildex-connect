@@ -123,7 +123,7 @@ const AuthPage = () => {
                 </p>
                 <Button
                   variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-construction-blue"
+                  className="border-white text-white font-medium hover:bg-white hover:text-construction-blue"
                   onClick={toggleForm}
                 >
                   Sign up
