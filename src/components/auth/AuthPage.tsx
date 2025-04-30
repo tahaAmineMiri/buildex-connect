@@ -1,18 +1,58 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Facebook, Linkedin, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/services/auth/useAuth";
+import { useToast } from "@/components/ui/use-toast";
 
 const AuthPage = () => {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const { login, register } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   const toggleForm = () => setIsSignUp(!isSignUp);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", isSignUp ? "Sign Up" : "Sign In");
+    
+    try {
+      let success;
+      
+      if (isSignUp) {
+        success = await register(name, email, password);
+      } else {
+        success = await login(email, password);
+      }
+      
+      if (success) {
+        toast({
+          title: isSignUp ? "Account created" : "Welcome back!",
+          description: isSignUp 
+            ? "Your account has been created successfully" 
+            : "You have been logged in successfully",
+        });
+        navigate("/account");
+      } else {
+        toast({
+          title: "Authentication failed",
+          description: "Please check your credentials and try again",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "An error occurred",
+        description: "Please try again later",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -54,8 +94,20 @@ const AuthPage = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <Input type="email" placeholder="Email" required />
-            <Input type="password" placeholder="Password" required />
+            <Input 
+              type="email" 
+              placeholder="Email" 
+              required 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Input 
+              type="password" 
+              placeholder="Password" 
+              required 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
             <Button type="submit" className="w-full">
               Sign in
             </Button>
@@ -86,23 +138,29 @@ const AuthPage = () => {
                     placeholder="Full Name"
                     required
                     className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                   />
                   <Input
                     type="email"
                     placeholder="Email"
                     required
                     className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                   <Input
                     type="password"
                     placeholder="Password"
                     required
                     className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                   <Button
                     type="submit"
                     variant="outline"
-                    className="w-full border-white text-white hover:bg-white hover:text-construction-blue"
+                    className="w-full border-white text-white font-medium hover:bg-white hover:text-construction-blue"
                   >
                     Sign up
                   </Button>
