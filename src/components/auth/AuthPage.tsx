@@ -121,7 +121,7 @@ const AuthPage = () => {
           </p>
           <Button
             variant="outline"
-            className="border-white text-white font-medium hover:bg-white hover:text-construction-blue"
+            className="!bg-transparent !border-construction-white !text-construction-white font-medium hover:!bg-construction-white hover:!text-construction-blue"
             onClick={handleSignUpClick}
           >
             Sign up
