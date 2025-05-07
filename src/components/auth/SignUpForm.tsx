@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/providers";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks";
 
