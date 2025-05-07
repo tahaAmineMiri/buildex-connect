@@ -1,12 +1,11 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "@/hooks/useAuth";
-import AuthPage from "./pages/auth/AuthPage";
+import { AppProvider } from "@/providers";
+import { ROUTES } from "@/config";
+
+// Pages
 import Index from "./pages/Index";
+import AuthPage from "./pages/auth/AuthPage";
 import Products from "./pages/Products";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -16,33 +15,25 @@ import SellerDashboard from "./pages/dashboard/SellerDashboard";
 import AdminDashboard from "./pages/dashboard/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
-
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/sign-in" element={<Navigate to="/auth" replace />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/registration" element={<Registration />} />
-            <Route path="/buyer-dashboard" element={<BuyerDashboard />} />
-            <Route path="/seller-dashboard" element={<SellerDashboard />} />
-            <Route path="/admin-dashboard" element={<AdminDashboard />} />
-            <Route path="/products/:id" element={<Products />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
-  </QueryClientProvider>
+  <AppProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path={ROUTES.HOME} element={<Index />} />
+        <Route path={ROUTES.AUTH} element={<AuthPage />} />
+        <Route path="/sign-in" element={<Navigate to={ROUTES.AUTH} replace />} />
+        <Route path={ROUTES.PRODUCTS} element={<Products />} />
+        <Route path={ROUTES.ABOUT} element={<About />} />
+        <Route path={ROUTES.CONTACT} element={<Contact />} />
+        <Route path={ROUTES.REGISTRATION} element={<Registration />} />
+        <Route path={ROUTES.BUYER_DASHBOARD} element={<BuyerDashboard />} />
+        <Route path={ROUTES.SELLER_DASHBOARD} element={<SellerDashboard />} />
+        <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
+        <Route path="/products/:id" element={<Products />} />
+        <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+  </AppProvider>
 );
 
 export default App;

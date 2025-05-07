@@ -1,0 +1,39 @@
+
+import axios from 'axios';
+
+// Create a base axios instance with common configuration
+const apiClient = axios.create({
+  baseURL: '/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  timeout: 10000,
+});
+
+// Add a request interceptor for auth header
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Add a response interceptor for error handling
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Global error handling
+    const { response } = error;
+    
+    if (response && response.status === 401) {
+      // Handle unauthorized access (redirect to login, etc)
+      localStorage.removeItem('token');
+      window.location.href = '/auth';
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
+export default apiClient;
