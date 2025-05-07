@@ -1,152 +1,146 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, User, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { ShoppingCart, Menu, X, User, Bell } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 const NavBar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isAuthenticated, user } = useAuth();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
-    <header
-      className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out py-4 px-6 md:px-12',
-        {
-          'glass shadow-md py-3': isScrolled,
-          'bg-transparent': !isScrolled
-        }
-      )}
-    >
-      <div className="container mx-auto">
-        <div className="flex items-center justify-between">
-          <Link 
-            to="/" 
-            className="text-2xl font-display font-bold text-construction-blue flex items-center group"
-          >
-            <span className="inline-block mr-2 text-construction-orange group-hover:rotate-12 transition-transform duration-300">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 21V10L12 5L21 10V21H3Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M9 21V14H15V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </span>
-            <span className="relative after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-0 after:bg-construction-orange after:transition-all after:duration-300 group-hover:after:w-full">
-              Incom
-            </span>
-          </Link>
-
-          {/* Desktop menu */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link 
-              to="/" 
-              className="text-construction-slate hover:text-construction-black transition-colors animated-underline"
-            >
-              Home
+    <header className="fixed inset-x-0 top-0 z-30 bg-white border-b border-gray-200">
+      <nav className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex">
+            <Link to="/" className="flex items-center">
+              <span className="text-xl font-bold text-construction-blue">INCOM</span>
             </Link>
-            <Link 
-              to="/products" 
-              className="text-construction-slate hover:text-construction-black transition-colors animated-underline"
-            >
-              Products
-            </Link>
-            <Link 
-              to="/about" 
-              className="text-construction-slate hover:text-construction-black transition-colors animated-underline"
-            >
-              About
-            </Link>
-            <Link 
-              to="/contact" 
-              className="text-construction-slate hover:text-construction-black transition-colors animated-underline"
-            >
-              Contact
-            </Link>
-          </nav>
-
-          {/* Desktop actions */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="icon" className="rounded-full hover:bg-construction-gray/50">
-              <Search className="h-5 w-5 text-construction-slate" />
-            </Button>
-            <Button variant="ghost" size="icon" className="rounded-full hover:bg-construction-gray/50">
-              <User className="h-5 w-5 text-construction-slate" />
-            </Button>
-            <Button variant="default" className="bg-construction-blue hover:bg-construction-blue/90 text-white rounded-full">
-              Sign In
-            </Button>
           </div>
 
-          {/* Mobile menu button */}
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="md:hidden rounded-full"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? (
-              <X className="h-6 w-6 text-construction-slate" />
+          <div className="hidden md:flex items-center space-x-8">
+            <Link to="/products" className="text-gray-600 hover:text-construction-blue">
+              Products
+            </Link>
+            <Link to="/about" className="text-gray-600 hover:text-construction-blue">
+              About
+            </Link>
+            <Link to="/contact" className="text-gray-600 hover:text-construction-blue">
+              Contact
+            </Link>
+          </div>
+
+          <div className="hidden md:flex items-center space-x-4">
+            {isAuthenticated ? (
+              <>
+                <Button variant="ghost" size="icon">
+                  <Bell className="h-5 w-5" />
+                </Button>
+                <Button variant="ghost" size="icon">
+                  <ShoppingCart className="h-5 w-5" />
+                </Button>
+                <Link to="/account">
+                  <Button variant="ghost" size="icon">
+                    <User className="h-5 w-5" />
+                  </Button>
+                </Link>
+              </>
             ) : (
-              <Menu className="h-6 w-6 text-construction-slate" />
+              <>
+                <Link to="/auth">
+                  <Button variant="ghost">Sign In</Button>
+                </Link>
+                <Link to="/registration">
+                  <Button>Register</Button>
+                </Link>
+              </>
             )}
-          </Button>
+          </div>
+
+          <div className="md:hidden">
+            <Button variant="ghost" size="icon" onClick={toggleMenu}>
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </Button>
+          </div>
         </div>
 
-        {/* Mobile menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-white absolute top-full left-0 right-0 p-6 shadow-lg rounded-b-2xl animate-slide-up">
-            <nav className="flex flex-col space-y-4">
-              <Link 
-                to="/" 
-                className="text-construction-slate hover:text-construction-black py-2 transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Home
-              </Link>
-              <Link 
-                to="/products" 
-                className="text-construction-slate hover:text-construction-black py-2 transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
+        {isMenuOpen && (
+          <div className="md:hidden py-4">
+            <div className="flex flex-col space-y-4">
+              <Link
+                to="/products"
+                className="text-gray-600 hover:text-gray-900 px-3 py-2"
+                onClick={() => setIsMenuOpen(false)}
               >
                 Products
               </Link>
-              <Link 
-                to="/about" 
-                className="text-construction-slate hover:text-construction-black py-2 transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
+              <Link
+                to="/about"
+                className="text-gray-600 hover:text-gray-900 px-3 py-2"
+                onClick={() => setIsMenuOpen(false)}
               >
                 About
               </Link>
-              <Link 
-                to="/contact" 
-                className="text-construction-slate hover:text-construction-black py-2 transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
+              <Link
+                to="/contact"
+                className="text-gray-600 hover:text-gray-900 px-3 py-2"
+                onClick={() => setIsMenuOpen(false)}
               >
                 Contact
               </Link>
-              <div className="pt-4 flex items-center space-x-4">
-                <Button variant="outline" size="sm" className="flex-1">
-                  Search
-                </Button>
-                <Button variant="default" size="sm" className="flex-1 bg-construction-blue hover:bg-construction-blue/90">
-                  Sign In
-                </Button>
+
+              <div className="border-t border-gray-200 pt-4 mt-2">
+                {isAuthenticated ? (
+                  <>
+                    <Link
+                      to="/account"
+                      className="flex items-center text-gray-600 hover:text-gray-900 px-3 py-2"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <User className="h-5 w-5 mr-2" />
+                      My Account
+                    </Link>
+                    <Link
+                      to="/cart"
+                      className="flex items-center text-gray-600 hover:text-gray-900 px-3 py-2"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <ShoppingCart className="h-5 w-5 mr-2" />
+                      Cart
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/auth"
+                      className="block px-3 py-2"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <Button variant="ghost" className="w-full">
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link
+                      to="/registration"
+                      className="block px-3 py-2"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <Button className="w-full">
+                        Register
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
-            </nav>
+            </div>
           </div>
         )}
-      </div>
+      </nav>
     </header>
   );
 };
