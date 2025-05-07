@@ -1,72 +1,21 @@
-/**
- * Context Menu Component
- * 
- * A right-click menu component that provides contextual actions and options.
- * Built on top of Radix UI's context menu primitive with custom styling.
- * 
- * @component
- * @example
- * <ContextMenu>
- *   <ContextMenuTrigger>Right click me</ContextMenuTrigger>
- *   <ContextMenuContent>
- *     <ContextMenuItem>Profile</ContextMenuItem>
- *     <ContextMenuItem>Settings</ContextMenuItem>
- *     <ContextMenuSeparator />
- *     <ContextMenuItem>Log out</ContextMenuItem>
- *   </ContextMenuContent>
- * </ContextMenu>
- */
-
 import * as React from "react"
 import * as ContextMenuPrimitive from "@radix-ui/react-context-menu"
 import { Check, ChevronRight, Circle } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-// ==============================
-// Root Component
-// ==============================
-/**
- * Root container for the context menu
- */
 const ContextMenu = ContextMenuPrimitive.Root
 
-/**
- * Trigger element that opens the context menu on right-click
- */
 const ContextMenuTrigger = ContextMenuPrimitive.Trigger
 
-/**
- * Groups related context menu items together
- */
 const ContextMenuGroup = ContextMenuPrimitive.Group
 
-/**
- * Portal for rendering the menu outside the DOM hierarchy
- */
 const ContextMenuPortal = ContextMenuPrimitive.Portal
 
-/**
- * Container for submenu structure
- */
 const ContextMenuSub = ContextMenuPrimitive.Sub
 
-/**
- * Group for radio button menu items
- */
 const ContextMenuRadioGroup = ContextMenuPrimitive.RadioGroup
 
-// ==============================
-// Submenu Components
-// ==============================
-/**
- * Trigger for a submenu
- * 
- * @example
- * <ContextMenuSubTrigger inset>
- *   More options
- * </ContextMenuSubTrigger>
- */
 const ContextMenuSubTrigger = React.forwardRef<
   React.ElementRef<typeof ContextMenuPrimitive.SubTrigger>,
   React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.SubTrigger> & {
@@ -88,9 +37,6 @@ const ContextMenuSubTrigger = React.forwardRef<
 ))
 ContextMenuSubTrigger.displayName = ContextMenuPrimitive.SubTrigger.displayName
 
-/**
- * Content container for submenus
- */
 const ContextMenuSubContent = React.forwardRef<
   React.ElementRef<typeof ContextMenuPrimitive.SubContent>,
   React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.SubContent>
@@ -106,12 +52,6 @@ const ContextMenuSubContent = React.forwardRef<
 ))
 ContextMenuSubContent.displayName = ContextMenuPrimitive.SubContent.displayName
 
-// ==============================
-// Main Content
-// ==============================
-/**
- * Main content container for the context menu
- */
 const ContextMenuContent = React.forwardRef<
   React.ElementRef<typeof ContextMenuPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Content>
@@ -129,17 +69,6 @@ const ContextMenuContent = React.forwardRef<
 ))
 ContextMenuContent.displayName = ContextMenuPrimitive.Content.displayName
 
-// ==============================
-// Menu Items
-// ==============================
-/**
- * Regular menu item
- * 
- * @example
- * <ContextMenuItem onSelect={handleClick} inset>
- *   Copy
- * </ContextMenuItem>
- */
 const ContextMenuItem = React.forwardRef<
   React.ElementRef<typeof ContextMenuPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Item> & {
@@ -158,14 +87,6 @@ const ContextMenuItem = React.forwardRef<
 ))
 ContextMenuItem.displayName = ContextMenuPrimitive.Item.displayName
 
-/**
- * Checkbox menu item
- * 
- * @example
- * <ContextMenuCheckboxItem checked={isEnabled} onCheckedChange={setIsEnabled}>
- *   Show notifications
- * </ContextMenuCheckboxItem>
- */
 const ContextMenuCheckboxItem = React.forwardRef<
   React.ElementRef<typeof ContextMenuPrimitive.CheckboxItem>,
   React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.CheckboxItem>
@@ -190,15 +111,6 @@ const ContextMenuCheckboxItem = React.forwardRef<
 ContextMenuCheckboxItem.displayName =
   ContextMenuPrimitive.CheckboxItem.displayName
 
-/**
- * Radio button menu item
- * 
- * @example
- * <ContextMenuRadioGroup value={sorting} onValueChange={setSorting}>
- *   <ContextMenuRadioItem value="name">Sort by name</ContextMenuRadioItem>
- *   <ContextMenuRadioItem value="date">Sort by date</ContextMenuRadioItem>
- * </ContextMenuRadioGroup>
- */
 const ContextMenuRadioItem = React.forwardRef<
   React.ElementRef<typeof ContextMenuPrimitive.RadioItem>,
   React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.RadioItem>
@@ -221,12 +133,6 @@ const ContextMenuRadioItem = React.forwardRef<
 ))
 ContextMenuRadioItem.displayName = ContextMenuPrimitive.RadioItem.displayName
 
-// ==============================
-// Helpers & Decorations
-// ==============================
-/**
- * Label for grouping menu items
- */
 const ContextMenuLabel = React.forwardRef<
   React.ElementRef<typeof ContextMenuPrimitive.Label>,
   React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Label> & {
@@ -245,9 +151,6 @@ const ContextMenuLabel = React.forwardRef<
 ))
 ContextMenuLabel.displayName = ContextMenuPrimitive.Label.displayName
 
-/**
- * Visual separator between menu items
- */
 const ContextMenuSeparator = React.forwardRef<
   React.ElementRef<typeof ContextMenuPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Separator>
@@ -260,9 +163,6 @@ const ContextMenuSeparator = React.forwardRef<
 ))
 ContextMenuSeparator.displayName = ContextMenuPrimitive.Separator.displayName
 
-/**
- * Shortcut key display component
- */
 const ContextMenuShortcut = ({
   className,
   ...props
@@ -279,9 +179,6 @@ const ContextMenuShortcut = ({
 }
 ContextMenuShortcut.displayName = "ContextMenuShortcut"
 
-// ==============================
-// Exports
-// ==============================
 export {
   ContextMenu,
   ContextMenuTrigger,

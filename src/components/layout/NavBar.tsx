@@ -1,16 +1,13 @@
 
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { User, Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Search, User, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@/services/auth/useAuth';
 
 const NavBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,18 +19,6 @@ const NavBar = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
-  const handleAccountClick = () => {
-    if (isAuthenticated) {
-      navigate('/account');
-    } else {
-      navigate('/auth');
-    }
-  };
-
-  const handleSignInClick = () => {
-    navigate('/auth');
-  };
 
   return (
     <header
@@ -92,19 +77,13 @@ const NavBar = () => {
 
           {/* Desktop actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="rounded-full hover:bg-construction-gray/50"
-              onClick={handleAccountClick}
-            >
+            <Button variant="ghost" size="icon" className="rounded-full hover:bg-construction-gray/50">
+              <Search className="h-5 w-5 text-construction-slate" />
+            </Button>
+            <Button variant="ghost" size="icon" className="rounded-full hover:bg-construction-gray/50">
               <User className="h-5 w-5 text-construction-slate" />
             </Button>
-            <Button 
-              variant="default" 
-              className="bg-construction-blue hover:bg-construction-blue/90 text-white rounded-full"
-              onClick={handleSignInClick}
-            >
+            <Button variant="default" className="bg-construction-blue hover:bg-construction-blue/90 text-white rounded-full">
               Sign In
             </Button>
           </div>
@@ -157,26 +136,10 @@ const NavBar = () => {
                 Contact
               </Link>
               <div className="pt-4 flex items-center space-x-4">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="flex-1"
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    handleAccountClick();
-                  }}
-                >
-                  Account
+                <Button variant="outline" size="sm" className="flex-1">
+                  Search
                 </Button>
-                <Button 
-                  variant="default" 
-                  size="sm" 
-                  className="flex-1 bg-construction-blue hover:bg-construction-blue/90"
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    handleSignInClick();
-                  }}
-                >
+                <Button variant="default" size="sm" className="flex-1 bg-construction-blue hover:bg-construction-blue/90">
                   Sign In
                 </Button>
               </div>
