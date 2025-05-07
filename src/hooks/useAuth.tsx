@@ -15,7 +15,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // In a real application, you would validate credentials with an API
     console.log("Logging in with:", email, password);
     
-    // Mock successful login
+    // Mock successful login with type-compatible user object
     setUser({
       id: "1",
       name: "John Doe",
@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // In a real application, you would send registration data to an API
     console.log("Registering:", { email, password, name, role });
     
-    // Mock successful registration and automatic login
+    // Mock successful registration and automatic login with type-compatible user object
     setUser({
       id: "2",
       name: name,
