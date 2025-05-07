@@ -2,45 +2,43 @@
 import React from "react";
 import AuthLayout from "@/components/auth/AuthLayout";
 import SignInForm from "@/components/auth/SignInForm";
-import SignUpForm from "@/components/auth/SignUpForm";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const AuthPage = () => {
-  const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState("signin");
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check URL params for tab selection
-    const tab = searchParams.get("tab");
-    if (tab === "signup") {
-      setActiveTab("signup");
-    } else {
-      setActiveTab("signin");
-    }
-  }, [searchParams]);
+  const handleRegisterClick = () => {
+    navigate("/#role-selection");
+  };
 
   return (
     <AuthLayout>
       <div className="container flex items-center justify-center h-screen px-4 mx-auto">
         <Card className="w-full max-w-md">
-          <CardContent className="p-0">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="signin">Sign In</TabsTrigger>
-                <TabsTrigger value="signup">Sign Up</TabsTrigger>
-              </TabsList>
-              <div className="p-6">
-                <TabsContent value="signin">
-                  <SignInForm />
-                </TabsContent>
-                <TabsContent value="signup">
-                  <SignUpForm />
-                </TabsContent>
+          <CardContent className="p-6">
+            <div className="space-y-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold">Sign In</h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Enter your credentials to access your account
+                </p>
               </div>
-            </Tabs>
+              <SignInForm />
+              <div className="border-t pt-4">
+                <p className="text-center text-sm text-muted-foreground mb-4">
+                  Don't have an account yet?
+                </p>
+                <Button 
+                  onClick={handleRegisterClick} 
+                  variant="outline" 
+                  className="w-full"
+                >
+                  Register as Buyer or Seller
+                </Button>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>

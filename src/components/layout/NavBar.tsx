@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, Menu, X, User, Bell } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
@@ -8,9 +8,18 @@ import { useAuth } from '@/hooks/useAuth';
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleRegisterClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate("/#role-selection");
+    if (isMenuOpen) {
+      setIsMenuOpen(false);
+    }
   };
 
   return (
@@ -55,9 +64,7 @@ const NavBar = () => {
                 <Link to="/auth">
                   <Button variant="ghost">Sign In</Button>
                 </Link>
-                <Link to="/registration">
-                  <Button>Register</Button>
-                </Link>
+                <Button onClick={handleRegisterClick}>Register</Button>
               </>
             )}
           </div>
@@ -125,15 +132,14 @@ const NavBar = () => {
                         Sign In
                       </Button>
                     </Link>
-                    <Link
-                      to="/registration"
-                      className="block px-3 py-2"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <Button className="w-full">
+                    <div className="block px-3 py-2">
+                      <Button 
+                        onClick={handleRegisterClick}
+                        className="w-full"
+                      >
                         Register
                       </Button>
-                    </Link>
+                    </div>
                   </>
                 )}
               </div>
