@@ -1,6 +1,5 @@
 // Export the ProductProps type from your existing ProductCard component
-import type { ProductProps } from "./ProductCard";
-
+import type { ProductProps } from "@/components/features/products/components/listing/ProductCard";
 // Mock data for products
 export const mockProducts: ProductProps[] = [
 	{

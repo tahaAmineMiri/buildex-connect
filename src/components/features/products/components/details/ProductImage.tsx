@@ -1,6 +1,6 @@
 
 import { Badge } from "@/components/common/ui/badge";
-import { ProductProps } from './ProductCard';
+import { ProductProps } from '@/components/features/products/components/listing/ProductCard';
 
 interface ProductImageProps {
   product: ProductProps;

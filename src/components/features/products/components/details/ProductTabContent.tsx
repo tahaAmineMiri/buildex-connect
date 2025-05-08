@@ -4,7 +4,7 @@ import { ScrollArea } from "@/components/common/ui/scroll-area";
 import ProductDetailsTab from "./ProductDetailsTab";
 import ProductShippingTab from "./ProductShippingTab";
 import ProductReviewsTab from "./ProductReviewsTab";
-import { ProductProps } from "./ProductCard";
+import { ProductProps } from "@/components/features/products/components/listing/ProductCard";
 
 interface ProductTabContentProps {
   product: ProductProps;

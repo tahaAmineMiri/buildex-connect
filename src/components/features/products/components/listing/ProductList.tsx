@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
-import { fetchInitialProducts, fetchMoreProducts } from "./product-data";
-import type { ProductProps } from "./ProductCard"; // Use your existing component
-import ProductDetailModal from "./ProductDetailModal"; // Use your existing component
-import ProductSearch from "./ProductSearch"; // Use your existing component
-import ProductGrid from "./ProductGrid"; // Use your existing component
-import ProductLoadingState from "./ProductLoadingState"; // Use your existing component
-import ProductPaginationLoader from "./ProductPaginationLoader"; // Use your existing component
-import ProductEmptyState from "./ProductEmptyState"; // Use your existing component
-import ProductEndMessage from "./ProductEndMessage"; // Use your existing component
+import { fetchInitialProducts, fetchMoreProducts } from "@/components/features/products/components/data/product-data";
+import type { ProductProps } from "@/components/features/products/components/listing/ProductCard";
+import ProductDetailModal from "@/components/features/products/components/details/ProductDetailModal";
+import ProductSearch from "@/components/features/products/components/listing/ProductSearch";
+import ProductGrid from "@/components/features/products/components/listing/ProductGrid";
+import ProductLoadingState from "@/components/features/products/components/ui-states/ProductLoadingState";
+import ProductPaginationLoader from "@/components/features/products/components/ui-states/ProductPaginationLoader";
+import ProductEmptyState from "@/components/features/products/components/ui-states/ProductEmptyState";
+import ProductEndMessage from "@/components/features/products/components/ui-states/ProductEndMessage";
 
 interface ProductListProps {
 	infiniteScroll?: boolean;

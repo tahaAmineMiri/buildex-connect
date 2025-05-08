@@ -1,5 +1,4 @@
-import { ProductProps } from "./ProductCard";
-
+import { ProductProps } from "@/components/features/products/components/listing/ProductCard";
 export const mockProducts: ProductProps[] = [
 	// ...mock data here...
 ];

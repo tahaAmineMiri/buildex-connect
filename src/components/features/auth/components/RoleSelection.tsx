@@ -1,8 +1,8 @@
 
 import { useState } from "react";
 import { motion, Variants } from "framer-motion";
-import BuyerCard from "@/components/features/registration/roleSelection/BuyerCard";
-import SellerCard from "@/components/features/registration/roleSelection/SellerCard";
+import BuyerCard from "@/components/features/auth/components/forms/roleSelection/BuyerCard";
+import SellerCard from "@/components/features/auth/components/forms/roleSelection/SellerCard";
 
 const RoleSelection = () => {
   const [hoveredRole, setHoveredRole] = useState<"buyer" | "seller" | null>(null);

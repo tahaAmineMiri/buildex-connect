@@ -1,5 +1,5 @@
 
-import { ProductProps } from './ProductCard';
+import { ProductProps } from '@/components/features/products/components/listing/ProductCard';
 
 interface ProductDetailsTabProps {
   product: ProductProps;

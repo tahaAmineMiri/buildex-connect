@@ -2,7 +2,7 @@
 import { Badge } from "@/components/common/ui/badge";
 import { DialogTitle } from "@/components/common/ui/dialog";
 import { Star } from "lucide-react";
-import { ProductProps } from './ProductCard';
+import { ProductProps } from '@/components/features/products/components/listing/ProductCard';
 
 interface ProductDetailHeaderProps {
   product: ProductProps;

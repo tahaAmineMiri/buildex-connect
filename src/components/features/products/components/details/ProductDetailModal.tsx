@@ -6,7 +6,7 @@ import {
   DialogHeader
 } from "@/components/common/ui/dialog";
 import { Tabs } from "@/components/common/ui/tabs";
-import { ProductProps } from './ProductCard';
+import { ProductProps } from '@/components/features/products/components/listing/ProductCard';
 
 import ProductImage from './ProductImage';
 import ProductDetailHeader from './ProductDetailHeader';
