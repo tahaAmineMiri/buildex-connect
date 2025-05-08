@@ -4,10 +4,10 @@ import type { ProductProps } from "@/components/features/products/components/lis
 import ProductDetailModal from "@/components/features/products/components/details/ProductDetailModal";
 import ProductSearch from "@/components/features/products/components/listing/ProductSearch";
 import ProductGrid from "@/components/features/products/components/listing/ProductGrid";
-import ProductLoadingState from "@/components/features/products/components/ui-states/ProductLoadingState";
-import ProductPaginationLoader from "@/components/features/products/components/ui-states/ProductPaginationLoader";
-import ProductEmptyState from "@/components/features/products/components/ui-states/ProductEmptyState";
-import ProductEndMessage from "@/components/features/products/components/ui-states/ProductEndMessage";
+import ProductLoadingState from "@/components/features/products/components/ui/ProductLoadingState";
+import ProductPaginationLoader from "@/components/features/products/components/ui/ProductPaginationLoader";
+import ProductEmptyState from "@/components/features/products/components/ui/ProductEmptyState";
+import ProductEndMessage from "@/components/features/products/components/ui/ProductEndMessage";
 
 interface ProductListProps {
 	infiniteScroll?: boolean;

@@ -3,10 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { AdminResponse, AdminRequest } from "@/types/admin";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/common/ui/table";
 import { Button } from "@/components/common/ui/button";
-import { Input } from "@/components/common/ui/input";
 import { Edit, Trash2, Eye } from "lucide-react";
-import AdminForm from "@/components/features/admin/components/AdminForm"
-import AdminDetails from "@/components/features/admin/components/AdminDetails";
+import AdminForm from "@/components/features/admin/components/forms/AdminForm"
+import AdminDetails from "@/components/features/admin/components/ui/AdminDetails";
 import { toast } from "sonner";
 
 const fetchAdmins = async (): Promise<AdminResponse[]> => {
