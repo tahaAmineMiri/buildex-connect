@@ -2,9 +2,9 @@
 import React from 'react';
 import NavBar from "@/components/common/layout/NavBar";
 import Footer from "@/components/common/layout/Footer";
-import SellerStats from '@/components/features/sellerDashboard/SellerStats';
-import OrdersReceived from '@/components/features/sellerDashboard/OrdersReceived';
-import ProductStats from '@/components/features/sellerDashboard/ProductStats';
+import SellerStats from '@/components/features/userDashboard/sellerDashboard/SellerStats';
+import OrdersReceived from '@/components/features/userDashboard/sellerDashboard/OrdersReceived';
+import ProductStats from '@/components/features/userDashboard/sellerDashboard/ProductStats';
 
 const SellerDashboard = () => {
   return (

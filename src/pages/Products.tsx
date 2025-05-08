@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import NavBar from "../components/common/layout/NavBar";
-import ProductList from "../components/features/products/ProductList";
+import ProductList from "../components/features/products/components/listing/ProductList";
 import Footer from "../components/common/layout/Footer";
 import {
 	Pagination,

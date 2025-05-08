@@ -1,7 +1,7 @@
 import NavBar from "@/components/common/layout/NavBar";
 import Hero from "@/components/common/layout/Hero";
-import ProductList from "@/components/features/products/ProductList";
-import RoleSelection from "@/components/features/registration/RoleSelection";
+import ProductList from "@/components/features/products/components/listing/ProductList";
+import RoleSelection from "@/components/features/auth/components/ui/RoleSelection";
 import Footer from "@/components/common/layout/Footer";
 
 const Index = () => {

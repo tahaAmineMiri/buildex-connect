@@ -1,12 +1,12 @@
-import NavBar from "../components/common/layout/NavBar";
-import Footer from "../components/common/layout/Footer";
+import NavBar from "@/components/common/layout/NavBar";
+import Footer from "@/components/common/layout/Footer";
 
-import BankDetailsSection from "../components/features/about/BankDetailsSection";
-import BusinessModelSection from "../components/features/about/BusinessModelSection";
-import HeroSection from "../components/features/about/HeroSection";
-import MissionVisionSection from "@/components/features/about/MissionVisionSection";
-import ShippingProcessSection from "@/components/features/about/ShippingProcessSection";
-import ContactInformationSection from "@/components/features/about/ContactInformationSection";
+import BankDetailsSection from "@/components/features/about/components/sections/BankDetailsSection";
+import BusinessModelSection from "@/components/features/about/components/sections/BusinessModelSection";
+import HeroSection from "@/components/features/about/components/sections/HeroSection";
+import MissionVisionSection from "@/components/features/about/components/sections/MissionVisionSection";
+import ShippingProcessSection from "@/components/features/about/components/sections/ShippingProcessSection";
+import ContactInformationSection from "@/components/features/about/components/sections/ContactInformationSection";
 
 const About = () => {
 	return (

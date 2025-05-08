@@ -1,11 +1,11 @@
 import NavBar from "../components/common/layout/NavBar";
 import Footer from "../components/common/layout/Footer";
-import HeroSection from "../components/features/contact/HeroSection";
-import ContactCard from "../components/features/contact/ContactCard";
+import HeroSection from "../components/features/contact/sections/HeroSection";
+import ContactCard from "../components/features/contact/ui/ContactCard";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
-import ContactForm from "../components/features/contact/ContactForm";
-import MapSection from "@/components/features/contact/MapSection";
+import ContactForm from "../components/features/contact/forms/ContactForm";
+import MapSection from "@/components/features/contact/sections/MapSection";
 
 const Contact = () => {
 	return (

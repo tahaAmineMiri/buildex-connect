@@ -1,8 +1,8 @@
 
 import React from 'react';
-import BuyerStats from '@/components/features/buyerDashboard/BuyerStats';
-import OrderHistory from '@/components/features/buyerDashboard/OrderHistory';
-import RecommendedProducts from '@/components/features/buyerDashboard/RecommendedProducts';
+import BuyerStats from '@/components/features/userDashboard/buyerDashboard/BuyerStats';
+import OrderHistory from '@/components/features/userDashboard/buyerDashboard/OrderHistory';
+import RecommendedProducts from '@/components/features/userDashboard/buyerDashboard/RecommendedProducts';
 import NavBar from "@/components/common/layout/NavBar";
 import Footer from "@/components/common/layout/Footer";
 
