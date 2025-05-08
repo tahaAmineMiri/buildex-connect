@@ -1,10 +1,10 @@
 
 import React from "react";
-import AuthLayout from "@/components/auth/AuthLayout";
-import SignInForm from "@/components/auth/SignInForm";
-import { Card, CardContent } from "@/components/ui/card";
+import AuthLayout from "@/components/features/auth/AuthLayout";
+import SignInForm from "@/components/features/auth/SignInForm";
+import { Card, CardContent } from "@/components/common/ui/card";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/common/ui/button";
 
 const AuthPage = () => {
   const navigate = useNavigate();

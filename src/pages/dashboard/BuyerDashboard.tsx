@@ -1,10 +1,10 @@
 
 import React from 'react';
-import BuyerStats from '@/components/dashboard/buyer/BuyerStats';
-import OrderHistory from '@/components/dashboard/buyer/OrderHistory';
-import RecommendedProducts from '@/components/dashboard/buyer/RecommendedProducts';
-import NavBar from "@/components/layout/NavBar";
-import Footer from "@/components/layout/Footer";
+import BuyerStats from '@/components/features/buyerDashboard/BuyerStats';
+import OrderHistory from '@/components/features/buyerDashboard/OrderHistory';
+import RecommendedProducts from '@/components/features/buyerDashboard/RecommendedProducts';
+import NavBar from "@/components/common/layout/NavBar";
+import Footer from "@/components/common/layout/Footer";
 
 const BuyerDashboard = () => {
   return (

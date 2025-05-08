@@ -1,7 +1,7 @@
 
-import NavBar from '../components/layout/NavBar';
-import RegistrationForm from '../components/forms/RegistrationForm';
-import Footer from '../components/layout/Footer';
+import NavBar from '../components/common/layout/NavBar';
+import RegistrationForm from '../components/features/registration/RegistrationForm';
+import Footer from '../components/common/layout/Footer';
 
 const Registration = () => {
   return (

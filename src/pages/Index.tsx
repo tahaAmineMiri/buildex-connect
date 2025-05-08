@@ -1,8 +1,8 @@
-import NavBar from "@/components/layout/NavBar";
-import Hero from "@/components/layout/Hero";
-import ProductList from "@/components/sections/product/ProductList";
-import RoleSelection from "@/components/forms/RoleSelection";
-import Footer from "@/components/layout/Footer";
+import NavBar from "@/components/common/layout/NavBar";
+import Hero from "@/components/common/layout/Hero";
+import ProductList from "@/components/features/products/ProductList";
+import RoleSelection from "@/components/features/registration/RoleSelection";
+import Footer from "@/components/common/layout/Footer";
 
 const Index = () => {
 	return (

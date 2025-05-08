@@ -1,10 +1,10 @@
 
 import React, { useState } from "react";
-import AdminNavigation from "@/components/admin/AdminNavigation";
-import AdminManagement from "@/components/admin/AdminManagement";
-import OrderManagement from "@/components/admin/OrderManagement";
-import PaymentVerification from "@/components/admin/PaymentVerification";
-import UserVerification from "@/components/admin/UserVerification";
+import AdminNavigation from "@/components/features/admin/AdminNavigation";
+import AdminManagement from "@/components/features/admin/AdminManagement";
+import OrderManagement from "@/components/features/admin/OrderManagement";
+import PaymentVerification from "@/components/features/admin/PaymentVerification";
+import UserVerification from "@/components/features/admin/UserVerification";
 
 // Define the possible admin sections
 type AdminSection = "admins" | "orders" | "payments" | "users";

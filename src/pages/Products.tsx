@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import NavBar from "../components/layout/NavBar";
-import ProductList from "../components/sections/product/ProductList";
-import Footer from "../components/layout/Footer";
+import NavBar from "../components/common/layout/NavBar";
+import ProductList from "../components/features/products/ProductList";
+import Footer from "../components/common/layout/Footer";
 import {
 	Pagination,
 	PaginationContent,
@@ -9,7 +9,7 @@ import {
 	PaginationLink,
 	PaginationNext,
 	PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "@/components/common/ui/pagination";
 import { motion } from "framer-motion";
 
 const Products = () => {

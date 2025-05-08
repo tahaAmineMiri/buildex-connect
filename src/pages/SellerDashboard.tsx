@@ -5,8 +5,8 @@ import {
   Search, Bell, MessageSquare, Settings, Home, Package, ShoppingCart, 
   CreditCard, BarChart2, Users, HelpCircle, LogOut, Plus, Truck, DollarSign 
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/common/ui/button';
+import { Input } from '@/components/common/ui/input';
 
 const SellerDashboard = () => {
   const [activeTab, setActiveTab] = useState('home');

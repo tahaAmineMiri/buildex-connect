@@ -2,9 +2,9 @@
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./AuthProvider";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/common/ui/tooltip";
+import { Toaster } from "@/components/common/ui/toaster";
+import { Toaster as Sonner } from "@/components/common/ui/sonner";
 
 interface AppProviderProps {
   children: React.ReactNode;
