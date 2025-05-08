@@ -5,7 +5,7 @@ import { ROUTES } from "@/config";
 
 // Pages
 import Index from "./pages/Index";
-import AuthPage from "./pages/auth/AuthPage";
+import AuthPage from "./pages/AuthPage";
 import Products from "./pages/Products";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
