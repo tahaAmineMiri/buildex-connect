@@ -3,16 +3,31 @@ import * as SliderPrimitive from "@radix-ui/react-slider"
 
 import { cn } from "@/lib/utils"
 
-const Slider = React.forwardRef<
-  React.ElementRef<typeof SliderPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
->(({ className, ...props }, ref) => (
+// ==============================
+// Type Aliases
+// ==============================
+
+type SliderRef = React.ElementRef<typeof SliderPrimitive.Root>
+
+// ==============================
+// Interfaces
+// ==============================
+
+interface SliderProps extends React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> {
+  className?: string
+}
+
+// ==============================
+// Slider Component
+// ==============================
+
+/**
+ * Input control that allows users to select a value from a range
+ */
+const Slider = React.forwardRef<SliderRef, SliderProps>(({ className, ...props }, ref) => (
   <SliderPrimitive.Root
     ref={ref}
-    className={cn(
-      "relative flex w-full touch-none select-none items-center",
-      className
-    )}
+    className={cn("relative flex w-full touch-none select-none items-center", className)}
     {...props}
   >
     <SliderPrimitive.Track className="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary">
@@ -22,5 +37,9 @@ const Slider = React.forwardRef<
   </SliderPrimitive.Root>
 ))
 Slider.displayName = SliderPrimitive.Root.displayName
+
+// ==============================
+// Exports
+// ==============================
 
 export { Slider }

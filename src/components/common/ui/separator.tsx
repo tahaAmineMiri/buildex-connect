@@ -3,14 +3,31 @@ import * as SeparatorPrimitive from "@radix-ui/react-separator"
 
 import { cn } from "@/lib/utils"
 
-const Separator = React.forwardRef<
-  React.ElementRef<typeof SeparatorPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>
->(
-  (
-    { className, orientation = "horizontal", decorative = true, ...props },
-    ref
-  ) => (
+// ==============================
+// Type Aliases
+// ==============================
+
+type SeparatorRef = React.ElementRef<typeof SeparatorPrimitive.Root>
+
+// ==============================
+// Interfaces
+// ==============================
+
+interface SeparatorProps extends React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root> {
+  className?: string
+  orientation?: "horizontal" | "vertical"
+  decorative?: boolean
+}
+
+// ==============================
+// Separator Component
+// ==============================
+
+/**
+ * Visual divider that separates content
+ */
+const Separator = React.forwardRef<SeparatorRef, SeparatorProps>(
+  ({ className, orientation = "horizontal", decorative = true, ...props }, ref) => (
     <SeparatorPrimitive.Root
       ref={ref}
       decorative={decorative}
@@ -18,12 +35,16 @@ const Separator = React.forwardRef<
       className={cn(
         "shrink-0 bg-border",
         orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  ),
 )
 Separator.displayName = SeparatorPrimitive.Root.displayName
+
+// ==============================
+// Exports
+// ==============================
 
 export { Separator }

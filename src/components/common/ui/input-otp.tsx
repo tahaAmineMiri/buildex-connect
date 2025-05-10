@@ -4,6 +4,12 @@ import { Dot } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
+// ==============================
+// InputOTP Component
+// ==============================
+/**
+ * A wrapper around the OTPInput component with additional styling and props.
+ */
 const InputOTP = React.forwardRef<
   React.ElementRef<typeof OTPInput>,
   React.ComponentPropsWithoutRef<typeof OTPInput>
@@ -20,6 +26,12 @@ const InputOTP = React.forwardRef<
 ))
 InputOTP.displayName = "InputOTP"
 
+// ==============================
+// InputOTPGroup Component
+// ==============================
+/**
+ * A container for grouping multiple InputOTP components.
+ */
 const InputOTPGroup = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div">
@@ -28,6 +40,12 @@ const InputOTPGroup = React.forwardRef<
 ))
 InputOTPGroup.displayName = "InputOTPGroup"
 
+// ==============================
+// InputOTPSlot Component
+// ==============================
+/**
+ * Represents an individual slot in the OTP input, showing the character and caret.
+ */
 const InputOTPSlot = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div"> & { index: number }
@@ -56,6 +74,12 @@ const InputOTPSlot = React.forwardRef<
 })
 InputOTPSlot.displayName = "InputOTPSlot"
 
+// ==============================
+// InputOTPSeparator Component
+// ==============================
+/**
+ * A separator component (e.g., a dot) between OTP slots.
+ */
 const InputOTPSeparator = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div">
@@ -66,4 +90,7 @@ const InputOTPSeparator = React.forwardRef<
 ))
 InputOTPSeparator.displayName = "InputOTPSeparator"
 
+// ==============================
+// Exports
+// ==============================
 export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator }
