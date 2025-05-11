@@ -1,10 +1,14 @@
+// ProductShippingTab Component
+// This component displays shipping and delivery information
+// in the product detail modal
 
-import { Info, Truck } from "lucide-react";
+import { Info, Truck } from "lucide-react"; // Icons for shipping information
 
 const ProductShippingTab = () => {
   return (
     <div className="mt-2 focus:outline-none">
       <div className="space-y-4">
+        {/* Delivery information section */}
         <div className="flex items-start gap-3">
           <Truck className="h-5 w-5 text-construction-blue mt-0.5" />
           <div>
@@ -14,6 +18,7 @@ const ProductShippingTab = () => {
           </div>
         </div>
         
+        {/* Additional delivery notes section */}
         <div className="flex items-start gap-3">
           <Info className="h-5 w-5 text-construction-blue mt-0.5" />
           <div>

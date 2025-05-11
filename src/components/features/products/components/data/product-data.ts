@@ -1,6 +1,13 @@
-// Export the ProductProps type from your existing ProductCard component
+// Product Data File
+// This file provides mock product data and functions to simulate API requests
+// It allows us to test and demonstrate the product listing functionality
+// without requiring a real backend connection
+
+// Import the product type definition
 import type { ProductProps } from "@/components/features/products/components/listing/ProductCard";
-// Mock data for products
+
+// Sample product data for initial display
+// This represents what would normally come from a database or API
 export const mockProducts: ProductProps[] = [
 	{
 		id: 1,
@@ -100,7 +107,8 @@ export const mockProducts: ProductProps[] = [
 	},
 ];
 
-// Function to generate more mock products
+// Function to create additional mock products dynamically
+// Used to simulate loading more products for infinite scrolling
 export const generateMoreProducts = (
 	startId: number,
 	count: number
@@ -108,13 +116,13 @@ export const generateMoreProducts = (
 	return Array.from({ length: count }, (_, index) => ({
 		id: startId + index,
 		name: `Product ${startId + index}`,
-		price: Math.floor(Math.random() * 1000) + 10,
+		price: Math.floor(Math.random() * 1000) + 10, // Random price between $10-$1010
 		description: `This is a dynamically generated product description for product ${
 			startId + index
 		}. It's designed to simulate infinite scrolling.`,
 		image: `https://images.unsplash.com/photo-${Math.floor(
 			Math.random() * 100000
-		)}?ixlib=rb-4.0.3&auto=format&fit=crop&w=2670&q=80`,
+		)}?ixlib=rb-4.0.3&auto=format&fit=crop&w=2670&q=80`, // Random image
 		category: [
 			"Concrete",
 			"Structural",
@@ -123,29 +131,33 @@ export const generateMoreProducts = (
 			"Plumbing",
 			"Paint",
 			"Electrical",
-		][Math.floor(Math.random() * 7)],
-		rating: Math.floor(Math.random() * 10) / 2 + 2.5, // Generates a number between 2.5 and 5
+		][Math.floor(Math.random() * 7)], // Random category
+		rating: Math.floor(Math.random() * 10) / 2 + 2.5, // Rating between 2.5-5.0
 		availability: ["In Stock", "Low Stock", "Out of Stock"][
 			Math.floor(Math.random() * 3)
-		] as "In Stock" | "Low Stock" | "Out of Stock",
+		] as "In Stock" | "Low Stock" | "Out of Stock", // Random availability
 	}));
 };
 
-// Simulate fetching initial products
+// Simulate an API call to fetch initial products
+// This adds a delay to mimic a network request
 export const fetchInitialProducts = (): Promise<ProductProps[]> => {
 	return new Promise((resolve) => {
+		// Artificial 500ms delay
 		setTimeout(() => {
 			resolve(mockProducts);
 		}, 500);
 	});
 };
 
-// Simulate fetching more products
+// Simulate an API call to fetch more products (for pagination/infinite scroll)
+// This also adds a delay to mimic a network request
 export const fetchMoreProducts = (
 	startId: number,
 	count: number
 ): Promise<ProductProps[]> => {
 	return new Promise((resolve) => {
+		// Artificial 800ms delay
 		setTimeout(() => {
 			resolve(generateMoreProducts(startId, count));
 		}, 800);
