@@ -1,7 +1,14 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/common/ui/card';
 
+/**
+ * Interface that defines the structure of product statistics
+ * 
+ * id: Unique identifier for the product
+ * name: Product name
+ * sold: Number of units sold
+ * revenue: Total money earned from this product
+ */
 interface ProductStat {
   id: string;
   name: string;
@@ -9,7 +16,22 @@ interface ProductStat {
   revenue: number;
 }
 
+/**
+ * ProductStats Component
+ * 
+ * This component displays statistics about a seller's top-performing products.
+ * It shows a list of products ranked by sales performance, including:
+ * - Product name
+ * - Number of units sold
+ * - Total revenue generated
+ * 
+ * This helps sellers identify their most successful products.
+ */
 const ProductStats = () => {
+  /**
+   * Sample product statistics data
+   * In a real application, this would come from an API or database
+   */
   const topProducts: ProductStat[] = [
     {
       id: '1',
@@ -44,15 +66,18 @@ const ProductStats = () => {
       </CardHeader>
       <CardContent>
         <ul className="space-y-4">
+          {/* Display each product with its sales statistics */}
           {topProducts.map((product) => (
             <li 
               key={product.id}
               className="flex items-center justify-between border-b pb-2 last:border-0"
             >
               <div>
+                {/* Product name and units sold */}
                 <p className="font-medium">{product.name}</p>
                 <p className="text-sm text-muted-foreground">{product.sold} units sold</p>
               </div>
+              {/* Total revenue from this product */}
               <p className="font-bold">${product.revenue.toFixed(2)}</p>
             </li>
           ))}

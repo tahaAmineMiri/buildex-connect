@@ -1,11 +1,28 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/common/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/common/ui/table';
 import { Badge } from '@/components/common/ui/badge';
 import { Button } from '@/components/common/ui/button';
 
+/**
+ * OrdersReceived Component
+ * 
+ * This component displays orders that customers have placed with the seller.
+ * It shows a table with details about each order including:
+ * - Order ID
+ * - Customer name
+ * - Product details
+ * - Total amount
+ * - Current status (with color-coded indicators)
+ * - Action button to view more details
+ * 
+ * This gives sellers a quick overview of recent customer activity.
+ */
 const OrdersReceived = () => {
+  /**
+   * Sample order data
+   * In a real application, this would come from an API or database
+   */
   const recentOrders = [
     {
       id: '#ORD-7839',
@@ -37,6 +54,13 @@ const OrdersReceived = () => {
     }
   ];
 
+  /**
+   * Returns the appropriate color class based on order status
+   * - Green for completed orders
+   * - Amber/Yellow for orders being processed
+   * - Blue for orders that are shipping
+   * - Gray for pending orders
+   */
   const getStatusColor = (status: string): string => {
     switch (status) {
       case 'completed':
@@ -71,6 +95,7 @@ const OrdersReceived = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
+            {/* Display each order as a row in the table */}
             {recentOrders.map((order) => (
               <TableRow key={order.id}>
                 <TableCell className="font-medium">{order.id}</TableCell>
@@ -78,14 +103,17 @@ const OrdersReceived = () => {
                 <TableCell>{order.product}</TableCell>
                 <TableCell>${order.amount.toFixed(2)}</TableCell>
                 <TableCell>
+                  {/* Status badge with color based on current status */}
                   <Badge 
                     variant="outline"
                     className={getStatusColor(order.status)}
                   >
+                    {/* Capitalize first letter of status */}
                     {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
+                  {/* Button to view detailed information about the order */}
                   <Button variant="ghost" size="sm" className="text-xs">
                     View Details
                   </Button>

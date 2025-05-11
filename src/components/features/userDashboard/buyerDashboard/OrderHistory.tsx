@@ -1,10 +1,20 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/common/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/common/ui/table';
 import { Badge } from '@/components/common/ui/badge';
 import { ProductOrder } from '@/types/product';
 
+/**
+ * Mock order data for display purposes
+ * In a real application, this would come from an API call
+ * 
+ * Each order contains:
+ * - id: Unique order identifier
+ * - date: When the order was placed
+ * - items: Number of products in the order
+ * - total: Total cost of the order
+ * - status: Current state of the order (delivered, processing, shipped, pending)
+ */
 const mockOrders: ProductOrder[] = [
   {
     id: 'ORD-1234',
@@ -36,6 +46,18 @@ const mockOrders: ProductOrder[] = [
   }
 ];
 
+/**
+ * OrderHistory Component
+ * 
+ * Displays a table of the buyer's recent orders with details including:
+ * - Order ID
+ * - Date
+ * - Number of items
+ * - Total cost
+ * - Current status (with color-coded badges)
+ * 
+ * This gives buyers a quick overview of their purchase history.
+ */
 const OrderHistory = () => {
   return (
     <Card className="mb-6">
@@ -61,6 +83,7 @@ const OrderHistory = () => {
                 <TableCell>{order.items}</TableCell>
                 <TableCell>${order.total.toFixed(2)}</TableCell>
                 <TableCell>
+                  {/* Status badge with different styles based on status */}
                   <Badge 
                     variant={order.status === 'delivered' ? 'default' : 
                             order.status === 'shipped' ? 'secondary' : 
