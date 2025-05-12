@@ -17,15 +17,3 @@ const Index = () => {
 };
 
 export default Index;
-
-// import PaginationExample from "@/tests/PaginationTest";
-
-// const Index = () => {
-// 	return (
-// 		<div className="min-h-screen bg-white">
-// 			<PaginationExample />
-// 		</div>
-// 	);
-// };
-
-// export default Index;
