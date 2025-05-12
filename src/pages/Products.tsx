@@ -1,7 +1,10 @@
+// Import necessary hooks and components
 import { useState, useEffect } from "react";
 import NavBar from "../components/common/layout/NavBar";
 import ProductList from "../components/features/products/components/listing/ProductList";
 import Footer from "../components/common/layout/Footer";
+
+// Import UI components for pagination
 import {
 	Pagination,
 	PaginationContent,
@@ -10,35 +13,40 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from "@/components/common/ui/pagination";
+
+// Import animation components
 import { motion } from "framer-motion";
 
+// Main Products page component
 const Products = () => {
-	// State for current page in pagination
+	// State for tracking current page in pagination
 	const [currentPage, setCurrentPage] = useState(1);
 
-	// State to toggle between infinite scroll and pagination
+	// State to toggle between infinite scroll and pagination modes
 	const [isInfiniteScroll, setIsInfiniteScroll] = useState(false);
 
-	// Total number of pages (this would be dynamic in a real application)
+	// Total number of pages (would typically be fetched from an API in a real app)
 	const totalPages = 5;
 
-	// Function to toggle between infinite scroll and pagination
+	// Function to toggle between infinite scroll and pagination modes
 	const toggleScrollMode = () => {
 		setIsInfiniteScroll(!isInfiniteScroll);
 	};
 
 	return (
+		// Main container with full height and white background
 		<div className="min-h-screen bg-white">
 			{/* Navigation Bar */}
 			<NavBar />
 
 			<div className="pt-24 pb-16">
-				{/* Animated container for the main content */}
+				{/* Animated container for main content - fades in from top */}
 				<motion.div
 					className="container mx-auto px-6"
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.5 }}>
+					initial={{ opacity: 0, y: 20 }}  // Starting position (invisible, 20px below)
+					animate={{ opacity: 1, y: 0 }}   // End position (fully visible, normal position)
+					transition={{ duration: 0.5 }}>  // Animation timing
+					
 					{/* Header Section */}
 					<div className="mb-12">
 						{/* Page Title */}
@@ -53,7 +61,7 @@ const Products = () => {
 							needs at competitive prices.
 						</p>
 
-						{/* Toggle Button for Infinite Scroll / Pagination */}
+						{/* Toggle Button for switching between infinite scroll and pagination */}
 						<div className="mt-4">
 							<button
 								onClick={toggleScrollMode}
@@ -65,10 +73,10 @@ const Products = () => {
 						</div>
 					</div>
 
-					{/* Product List Section */}
+					{/* Product List Section - passing the infinite scroll mode as a prop */}
 					<ProductList infiniteScroll={isInfiniteScroll} />
 
-					{/* Pagination Section (only visible when infinite scroll is disabled) */}
+					{/* Pagination Section - only visible when infinite scroll is disabled */}
 					{!isInfiniteScroll && (
 						<div className="mt-12">
 							<Pagination>
@@ -78,20 +86,20 @@ const Products = () => {
 										<PaginationPrevious
 											href="#"
 											onClick={(e) => {
-												e.preventDefault();
+												e.preventDefault(); // Prevent default link behavior
 												if (currentPage > 1) setCurrentPage(currentPage - 1);
 											}}
 										/>
 									</PaginationItem>
 
-									{/* Page Numbers */}
+									{/* Page Number Buttons */}
 									{[...Array(totalPages)].map((_, i) => (
 										<PaginationItem key={i}>
 											<PaginationLink
 												href="#"
-												isActive={currentPage === i + 1}
+												isActive={currentPage === i + 1} // Highlight current page
 												onClick={(e) => {
-													e.preventDefault();
+													e.preventDefault(); // Prevent default link behavior
 													setCurrentPage(i + 1);
 												}}>
 												{i + 1}
@@ -104,7 +112,7 @@ const Products = () => {
 										<PaginationNext
 											href="#"
 											onClick={(e) => {
-												e.preventDefault();
+												e.preventDefault(); // Prevent default link behavior
 												if (currentPage < totalPages)
 													setCurrentPage(currentPage + 1);
 											}}
@@ -123,4 +131,5 @@ const Products = () => {
 	);
 };
 
+// Export the component for use in other files
 export default Products;
