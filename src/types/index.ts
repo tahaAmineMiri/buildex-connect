@@ -1,6 +1,6 @@
-
-// Re-export types with explicit naming to avoid conflicts
+// src/types/index.ts
+// Export all types
 export * from './product';
-export type { ProductProps as Product } from './product'; // Export ProductProps as Product
-export type { User as AdminUser, Admin, AdminRequest, AdminResponse, Order, OrderResponse, Payment, PaymentResponse, ApiResponse } from './admin';
-export * from './user';
+export * from './auth';
+export * from './cart';
+export * from './order';

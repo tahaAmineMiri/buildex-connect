@@ -1,177 +1,146 @@
-// ProductList Component
-// This is the main component for displaying products on the product listing page
-// It manages product loading, searching, and displaying the product grid
-// It also handles infinite scrolling and product detail modal functionality
-
-import { useState, useEffect, useCallback } from "react";
-import { fetchInitialProducts, fetchMoreProducts } from "@/components/features/products/components/data/product-data";
-import type { ProductProps } from "@/components/features/products/components/listing/ProductCard";
+// src/components/features/products/components/listing/ProductList.tsx
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
+import { getAllProducts } from "@/api/products";
 import ProductDetailModal from "@/components/features/products/components/details/ProductDetailModal";
 import ProductSearch from "@/components/features/products/components/listing/ProductSearch";
 import ProductGrid from "@/components/features/products/components/listing/ProductGrid";
 import ProductLoadingState from "@/components/features/products/components/ui/ProductLoadingState";
-import ProductPaginationLoader from "@/components/features/products/components/ui/ProductPaginationLoader";
 import ProductEmptyState from "@/components/features/products/components/ui/ProductEmptyState";
-import ProductEndMessage from "@/components/features/products/components/ui/ProductEndMessage";
+import { Product } from "@/types/product";
 
 interface ProductListProps {
-	infiniteScroll?: boolean; // Whether to use infinite scrolling or pagination
+  infiniteScroll?: boolean;
 }
 
+// Maps backend product data to the expected format for our components
+const mapBackendProduct = (product: any): Product => {
+  // Determine availability based on stock quantity
+  let availability: 'In Stock' | 'Low Stock' | 'Out of Stock';
+  
+  if (product.productStockQuantity > 10) {
+    availability = 'In Stock';
+  } else if (product.productStockQuantity > 0) {
+    availability = 'Low Stock';
+  } else {
+    availability = 'Out of Stock';
+  }
+  
+  return {
+    productId: product.productId,  // Include native backend fields
+    productName: product.productName,
+    productPrice: product.productPrice,
+    productDescription: product.productDescription,
+    productImage: product.productImage || 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80',
+    productCategory: product.productCategory,
+    productRating: product.productRating,
+    productStockQuantity: product.productStockQuantity || 0, // Ensure it's a number
+    availability: availability
+  };
+};
+
 const ProductList = ({ infiniteScroll = false }: ProductListProps) => {
-	// State for product data and UI
-	const [products, setProducts] = useState<ProductProps[]>([]);
-	const [searchTerm, setSearchTerm] = useState("");
-	const [page, setPage] = useState(1);
-	const [hasMore, setHasMore] = useState(true);
-	const [isLoading, setIsLoading] = useState(false);
-	const [selectedProduct, setSelectedProduct] = useState<ProductProps | null>(
-		null
-	);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-	// Load initial products when component mounts
-	useEffect(() => {
-		const loadInitialProducts = async () => {
-			setIsLoading(true);
-			try {
-				const initialProducts = await fetchInitialProducts();
-				setProducts(initialProducts);
-			} catch (error) {
-				console.error("Error loading products:", error);
-			} finally {
-				setIsLoading(false);
-			}
-		};
+  useEffect(() => {
+    const loadProducts = async () => {
+      setIsLoading(true);
+      try {
+        const response = await getAllProducts();
+        const mappedProducts = response.map(mapBackendProduct);
+        setProducts(mappedProducts);
+      } catch (error) {
+        console.error("Error loading products:", error);
+        toast.error("Failed to load products");
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-		loadInitialProducts();
-	}, []);
+    loadProducts();
+  }, []);
 
-	// Function to load more products for infinite scrolling
-	const loadMoreProducts = useCallback(async () => {
-		if (isLoading) return;
+  const filteredProducts = products.filter(
+    (product) =>
+      product.productName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.productDescription?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.productCategory?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-		setIsLoading(true);
-		try {
-			// Fetch next batch of products
-			const newProducts = await fetchMoreProducts(products.length + 1, 8);
-			setProducts((prev) => [...prev, ...newProducts]);
-			setPage((prevPage) => prevPage + 1);
+  const handleQuickView = (product: Product) => {
+    setSelectedProduct(product);
+  };
 
-			// Stop infinite loading after 5 pages (just for demo purposes)
-			if (page >= 5) {
-				setHasMore(false);
-			}
-		} catch (error) {
-			console.error("Error loading more products:", error);
-		} finally {
-			setIsLoading(false);
-		}
-	}, [products.length, page, isLoading]);
+  const closeQuickView = () => {
+    setSelectedProduct(null);
+  };
 
-	// Filter products based on search term
-	const filteredProducts = products.filter(
-		(product) =>
-			product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-			product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-			product.category.toLowerCase().includes(searchTerm.toLowerCase())
-	);
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+  };
 
-	// Handler for opening product quick view modal
-	const handleQuickView = (product: ProductProps) => {
-		setSelectedProduct(product);
-	};
+  const handleFilter = () => {
+    console.log("Filter clicked");
+  };
 
-	// Handler for closing product quick view modal
-	const closeQuickView = () => {
-		setSelectedProduct(null);
-	};
+  const handleSort = () => {
+    console.log("Sort clicked");
+  };
 
-	// Handler for search input changes
-	const handleSearchChange = (value: string) => {
-		setSearchTerm(value);
-	};
+  const clearSearch = () => {
+    setSearchTerm("");
+  };
 
-	// Placeholder for filter functionality
-	const handleFilter = () => {
-		// Implement filter functionality (not implemented in this version)
-		console.log("Filter clicked");
-	};
+  return (
+    <section className="py-16 bg-construction-gray/30">
+      <div className="container mx-auto px-6">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4 text-construction-black">
+            Featured Construction Materials
+          </h2>
+          <p className="text-construction-slate max-w-3xl mx-auto">
+            Browse our selection of high-quality construction materials from
+            verified suppliers worldwide. Request quotes, compare prices, and
+            find exactly what your project needs.
+          </p>
+        </div>
 
-	// Placeholder for sort functionality
-	const handleSort = () => {
-		// Implement sort functionality (not implemented in this version)
-		console.log("Sort clicked");
-	};
+        <ProductSearch
+          searchTerm={searchTerm}
+          onSearchChange={handleSearchChange}
+          onFilter={handleFilter}
+          onSort={handleSort}
+        />
 
-	// Handler to clear search input
-	const clearSearch = () => {
-		setSearchTerm("");
-	};
+        {isLoading ? (
+          <ProductLoadingState />
+        ) : filteredProducts.length === 0 ? (
+          <ProductEmptyState
+            searchTerm={searchTerm}
+            onClearSearch={clearSearch}
+          />
+        ) : (
+          <ProductGrid
+            products={filteredProducts}
+            infiniteScroll={false}
+            isLoading={isLoading}
+            hasMore={false}
+            onLoadMore={() => {}}
+            onQuickView={handleQuickView}
+          />
+        )}
+      </div>
 
-	return (
-		<section className="py-16 bg-construction-gray/30">
-			<div className="container mx-auto px-6">
-				{/* Section header */}
-				<div className="text-center mb-12">
-					<h2 className="text-3xl md:text-4xl font-display font-bold mb-4 text-construction-black">
-						Featured Construction Materials
-					</h2>
-					<p className="text-construction-slate max-w-3xl mx-auto">
-						Browse our selection of high-quality construction materials from
-						verified suppliers worldwide. Request quotes, compare prices, and
-						find exactly what your project needs.
-					</p>
-				</div>
-
-				{/* Search and filter bar */}
-				<ProductSearch
-					searchTerm={searchTerm}
-					onSearchChange={handleSearchChange}
-					onFilter={handleFilter}
-					onSort={handleSort}
-				/>
-
-				{/* Different states of the product listing */}
-				{/* 1. Initial loading state */}
-				{isLoading && products.length === 0 ? (
-					<ProductLoadingState />
-				) : filteredProducts.length === 0 ? (
-					// 2. No results found state
-					<ProductEmptyState
-						searchTerm={searchTerm}
-						onClearSearch={clearSearch}
-					/>
-				) : (
-					// 3. Normal display state with products
-					<>
-						<ProductGrid
-							products={filteredProducts}
-							infiniteScroll={infiniteScroll}
-							isLoading={isLoading}
-							hasMore={hasMore}
-							onLoadMore={loadMoreProducts}
-							onQuickView={handleQuickView}
-						/>
-
-						{/* Loading indicator when fetching more products */}
-						{infiniteScroll && isLoading && <ProductPaginationLoader />}
-
-						{/* End of catalog message when all products are loaded */}
-						{infiniteScroll && !hasMore && filteredProducts.length > 0 && (
-							<ProductEndMessage />
-						)}
-					</>
-				)}
-			</div>
-
-			{/* Product quick view modal */}
-			<ProductDetailModal
-				product={selectedProduct}
-				isOpen={!!selectedProduct}
-				onClose={closeQuickView}
-			/>
-		</section>
-	);
+      <ProductDetailModal
+        product={selectedProduct}
+        isOpen={!!selectedProduct}
+        onClose={closeQuickView}
+      />
+    </section>
+  );
 };
 
 export default ProductList;

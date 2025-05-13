@@ -1,9 +1,9 @@
-
+// src/api/axios.ts
 import axios from 'axios';
 
 // Create a base axios instance with common configuration
 const apiClient = axios.create({
-  baseURL: '/api',
+  baseURL: '/api/v1', // Updated to match the Spring Boot controller paths
   headers: {
     'Content-Type': 'application/json',
   },

@@ -1,17 +1,60 @@
-
-import React, { createContext, useContext, useState } from "react";
-import { User, AuthContextType } from "@/types";
-import { login as apiLogin, register as apiRegister } from "@/api/auth";
+// src/providers/AuthProvider.tsx
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { login as apiLogin, registerBuyer, registerSeller } from "@/api/auth";
 import { AUTH_TOKEN_KEY, AUTH_USER_KEY } from "@/config/constants";
+
+interface User {
+  userId: number;
+  userEmail: string;
+  userFullName: string;
+  userPosition: string;
+  userBusinessPhone: string;
+  userIsVerified: boolean;
+  userRole?: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  isAuthenticated: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+  registerAsBuyer: (data: BuyerRegistrationData) => Promise<void>;
+  registerAsSeller: (data: SellerRegistrationData) => Promise<void>;
+}
+
+interface BuyerRegistrationData {
+  userEmail: string;
+  userPassword: string;
+  userFullName: string;
+  userPosition: string;
+  userBusinessPhone: string;
+}
+
+interface SellerRegistrationData {
+  userEmail: string;
+  userPassword: string;
+  userFullName: string;
+  userPosition: string;
+  userBusinessPhone: string;
+}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+
+  // Check for existing session on initial load
+  useEffect(() => {
+    const storedUser = localStorage.getItem(AUTH_USER_KEY);
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (e) {
+        localStorage.removeItem(AUTH_USER_KEY);
+        localStorage.removeItem(AUTH_TOKEN_KEY);
+      }
+    }
+  }, []);
 
   const login = async (email: string, password: string) => {
     try {
@@ -28,22 +71,44 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const register = async (
-    email: string,
-    password: string,
-    name: string,
-    role: 'buyer' | 'seller'
-  ) => {
+  const registerAsBuyer = async (data: BuyerRegistrationData) => {
     try {
-      const response = await apiRegister({ email, password, name, role });
+      const response = await registerBuyer(data);
       
       // Store token and user data
       localStorage.setItem(AUTH_TOKEN_KEY, response.token);
-      localStorage.setItem(AUTH_USER_KEY, JSON.stringify(response.user));
+      localStorage.setItem(AUTH_USER_KEY, JSON.stringify({
+        ...response.user,
+        userRole: 'BUYER'
+      }));
       
-      setUser(response.user);
+      setUser({
+        ...response.user,
+        userRole: 'BUYER'
+      });
     } catch (error) {
-      console.error("Registration failed:", error);
+      console.error("Buyer registration failed:", error);
+      throw error;
+    }
+  };
+
+  const registerAsSeller = async (data: SellerRegistrationData) => {
+    try {
+      const response = await registerSeller(data);
+      
+      // Store token and user data
+      localStorage.setItem(AUTH_TOKEN_KEY, response.token);
+      localStorage.setItem(AUTH_USER_KEY, JSON.stringify({
+        ...response.user,
+        userRole: 'SELLER'
+      }));
+      
+      setUser({
+        ...response.user,
+        userRole: 'SELLER'
+      });
+    } catch (error) {
+      console.error("Seller registration failed:", error);
       throw error;
     }
   };
@@ -61,7 +126,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isAuthenticated: !!user,
     login,
     logout,
-    register
+    registerAsBuyer,
+    registerAsSeller
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,33 +1,60 @@
-
+// src/api/endpoints.ts
 // API endpoints constants
 
 // Auth endpoints
 export const AUTH = {
   LOGIN: '/auth/login',
-  REGISTER: '/auth/register',
-  LOGOUT: '/auth/logout',
-  REFRESH_TOKEN: '/auth/refresh',
+  REGISTER_BUYER: '/auth/register/buyer',
+  REGISTER_SELLER: '/auth/register/seller',
 };
 
 // Product endpoints
 export const PRODUCTS = {
   GET_ALL: '/products',
   GET_BY_ID: (id: string) => `/products/${id}`,
-  CREATE: '/products',
+  GET_BY_CATEGORY: (category: string) => `/products/category/${category}`,
+  GET_BY_SELLER: (sellerId: string) => `/products/seller/${sellerId}`,
+  CREATE: '/products/seller',
   UPDATE: (id: string) => `/products/${id}`,
   DELETE: (id: string) => `/products/${id}`,
+  UPDATE_STOCK: (id: string) => `/products/${id}/stock`,
+  UPDATE_PRICE: (id: string) => `/products/${id}/price`,
 };
 
 // Order endpoints
 export const ORDERS = {
   GET_ALL: '/orders',
   GET_BY_ID: (id: string) => `/orders/${id}`,
-  CREATE: '/orders',
+  GET_BY_BUYER: (buyerId: string) => `/orders/buyer/${buyerId}`,
+  GET_BY_STATUS: (status: string) => `/orders/status/${status}`,
+  CREATE: (buyerId: string) => `/orders/buyer/${buyerId}`,
   UPDATE_STATUS: (id: string) => `/orders/${id}/status`,
+  CANCEL: (id: string) => `/orders/${id}/cancel`,
+};
+
+// Cart endpoints
+export const CART = {
+  GET_BY_BUYER: (buyerId: string) => `/carts/buyer/${buyerId}`,
+  ADD_ITEM: (buyerId: string) => `/carts/buyer/${buyerId}/items`,
+  UPDATE_ITEM: (buyerId: string, itemId: string) => `/carts/buyer/${buyerId}/items/${itemId}`,
+  REMOVE_ITEM: (buyerId: string, productId: string) => `/carts/buyer/${buyerId}/items/${productId}`,
+  CLEAR: (buyerId: string) => `/carts/buyer/${buyerId}/clear`,
 };
 
 // User endpoints
 export const USERS = {
-  GET_PROFILE: '/users/profile',
-  UPDATE_PROFILE: '/users/profile',
+  BUYERS: {
+    GET_ALL: '/buyers',
+    GET_BY_ID: (id: string) => `/buyers/${id}`,
+    GET_BY_EMAIL: (email: string) => `/buyers/email/${email}`,
+    UPDATE: (id: string) => `/buyers/${id}`,
+    DELETE: (id: string) => `/buyers/${id}`,
+  },
+  SELLERS: {
+    GET_ALL: '/sellers',
+    GET_BY_ID: (id: string) => `/sellers/${id}`,
+    GET_BY_EMAIL: (email: string) => `/sellers/email/${email}`,
+    UPDATE: (id: string) => `/sellers/${id}`,
+    DELETE: (id: string) => `/sellers/${id}`,
+  },
 };

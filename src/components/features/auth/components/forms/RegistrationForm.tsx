@@ -1,3 +1,4 @@
+// src/components/features/auth/components/forms/RegistrationForm.tsx
 import { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -7,11 +8,9 @@ import { Input } from '@/components/common/ui/input';
 import { Label } from '@/components/common/ui/label';
 import { Textarea } from '@/components/common/ui/textarea';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/common/ui/select';
+import { useAuth } from '@/providers/AuthProvider';
+import { toast } from 'sonner';
 
-/**
- * Interface defining all the fields in our registration form
- * This helps TypeScript understand the shape of our form data
- */
 interface FormData {
   // Company Information
   companyName: string;
@@ -26,30 +25,19 @@ interface FormData {
   position: string;
   email: string;
   phone: string;
+  password: string;
   
   // Verification
   acceptTerms: boolean;
 }
 
-/**
- * Registration Form Component
- * 
- * A multi-step form for user registration with the following features:
- * - Handles both buyer and seller registration flows
- * - Collects company information, representative details, and verification
- * - Includes progress tracking and animated transitions between steps
- * - Performs basic validation and form submission
- */
 const RegistrationForm = () => {
-  // Get role parameter from URL (defaults to 'buyer' if not specified)
   const [searchParams] = useSearchParams();
   const role = searchParams.get('role') || 'buyer';
   const navigate = useNavigate();
   
-  // Track the current step in the registration process (1-3)
   const [currentStep, setCurrentStep] = useState(1);
   
-  // Initialize form data with empty values
   const [formData, setFormData] = useState<FormData>({
     companyName: '',
     registrationNumber: '',
@@ -61,22 +49,17 @@ const RegistrationForm = () => {
     position: '',
     email: '',
     phone: '',
+    password: '',
     acceptTerms: false
   });
   
-  /**
-   * Update a specific field in the form data
-   * @param field The form field to update
-   * @param value The new value for the field
-   */
+  const { registerAsBuyer, registerAsSeller } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const updateFormData = (field: keyof FormData, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
   
-  /**
-   * Move to the next step in the registration process
-   * Also scrolls to the top of the page for better user experience
-   */
   const nextStep = () => {
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
@@ -84,10 +67,6 @@ const RegistrationForm = () => {
     }
   };
   
-  /**
-   * Move to the previous step in the registration process
-   * Also scrolls to the top of the page for better user experience
-   */
   const prevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
@@ -95,21 +74,44 @@ const RegistrationForm = () => {
     }
   };
   
-  /**
-   * Handle form submission
-   * Currently logs the data and redirects to the appropriate dashboard
-   * In a real implementation, this would send data to a backend API
-   */
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Here you would typically send the data to your backend
     
-    // Redirect to the appropriate dashboard based on role
-    navigate(role === 'buyer' ? '/buyer-dashboard' : '/seller-dashboard');
+    if (!formData.acceptTerms) {
+      toast.error("You must accept the terms and conditions");
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      // Prepare registration data
+      const userData = {
+        userEmail: formData.email,
+        userPassword: formData.password,
+        userFullName: formData.fullName,
+        userPosition: formData.position,
+        userBusinessPhone: formData.phone
+      };
+      
+      // Register based on role
+      if (role === 'buyer') {
+        await registerAsBuyer(userData);
+        toast.success("Buyer registration successful!");
+        navigate('/buyer-dashboard');
+      } else {
+        await registerAsSeller(userData);
+        toast.success("Seller registration successful!");
+        navigate('/seller-dashboard');
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error("Registration failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  // Animation variants for the form steps
   const formVariants = {
     hidden: { opacity: 0, x: 20 },
     visible: { 
@@ -130,8 +132,8 @@ const RegistrationForm = () => {
   
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
+      {/* Header section with back button and step indicator */}
       <div className="mb-8">
-        {/* Header section with back button and step indicator */}
         <div className="flex items-center justify-between mb-8">
           <Button 
             variant="ghost" 
@@ -159,10 +161,9 @@ const RegistrationForm = () => {
           </p>
         </div>
         
-        {/* Progress Indicator - Shows current step visually */}
+        {/* Progress Indicator */}
         <div className="relative mb-12">
           <div className="flex items-center justify-between mb-2">
-            {/* Step 1 indicator */}
             <div 
               className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium z-10 ${
                 currentStep >= 1 ? 'bg-construction-blue text-white' : 'bg-construction-gray text-construction-slate'
@@ -170,7 +171,6 @@ const RegistrationForm = () => {
             >
               {currentStep > 1 ? <CheckCircle className="h-5 w-5" /> : <Building className="h-5 w-5" />}
             </div>
-            {/* Step 2 indicator */}
             <div 
               className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium z-10 ${
                 currentStep >= 2 ? 'bg-construction-blue text-white' : 'bg-construction-gray text-construction-slate'
@@ -178,7 +178,6 @@ const RegistrationForm = () => {
             >
               {currentStep > 2 ? <CheckCircle className="h-5 w-5" /> : <User className="h-5 w-5" />}
             </div>
-            {/* Step 3 indicator */}
             <div 
               className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium z-10 ${
                 currentStep >= 3 ? 'bg-construction-blue text-white' : 'bg-construction-gray text-construction-slate'
@@ -187,14 +186,11 @@ const RegistrationForm = () => {
               <FileText className="h-5 w-5" />
             </div>
           </div>
-          {/* Progress bar background */}
           <div className="absolute top-5 left-5 right-5 h-[2px] bg-construction-gray/50"></div>
-          {/* Progress bar fill - width adjusts based on current step */}
           <div 
             className="absolute top-5 left-5 h-[2px] bg-construction-blue transition-all duration-500"
             style={{ width: `${(currentStep - 1) * 50}%` }}
           ></div>
-          {/* Step labels */}
           <div className="flex justify-between text-xs mt-2 text-construction-slate">
             <span>Company Info</span>
             <span>Representative</span>
@@ -215,7 +211,6 @@ const RegistrationForm = () => {
             className="space-y-6"
           >
             <div className="space-y-4">
-              {/* Company Name field */}
               <div>
                 <Label htmlFor="companyName">Company Name <span className="text-red-500">*</span></Label>
                 <Input
@@ -229,7 +224,6 @@ const RegistrationForm = () => {
                 />
               </div>
               
-              {/* Business Registration Number field */}
               <div>
                 <Label htmlFor="registrationNumber">Business Registration Number <span className="text-red-500">*</span></Label>
                 <Input
@@ -243,7 +237,6 @@ const RegistrationForm = () => {
                 />
               </div>
               
-              {/* Company Address field (textarea for multiple lines) */}
               <div>
                 <Label htmlFor="address">Company Address <span className="text-red-500">*</span></Label>
                 <Textarea
@@ -256,7 +249,6 @@ const RegistrationForm = () => {
                 />
               </div>
               
-              {/* Country selection dropdown */}
               <div>
                 <Label htmlFor="country">Country <span className="text-red-500">*</span></Label>
                 <Select
@@ -277,7 +269,6 @@ const RegistrationForm = () => {
                 </Select>
               </div>
               
-              {/* Industry Category selection dropdown */}
               <div>
                 <Label htmlFor="industry">Industry Category <span className="text-red-500">*</span></Label>
                 <Select
@@ -298,7 +289,6 @@ const RegistrationForm = () => {
                 </Select>
               </div>
               
-              {/* Tax ID field (optional) */}
               <div>
                 <Label htmlFor="taxId">Tax ID (if applicable)</Label>
                 <Input
@@ -312,11 +302,11 @@ const RegistrationForm = () => {
               </div>
             </div>
             
-            {/* Navigation button for Step 1 */}
             <div className="pt-4">
               <Button 
                 type="button" 
                 onClick={nextStep}
+                // src/components/features/auth/components/forms/RegistrationForm.tsx (continued)
                 className="w-full bg-construction-blue hover:bg-construction-blue/90"
               >
                 Continue
@@ -337,7 +327,6 @@ const RegistrationForm = () => {
             className="space-y-6"
           >
             <div className="space-y-4">
-              {/* Full Name field */}
               <div>
                 <Label htmlFor="fullName">Full Name <span className="text-red-500">*</span></Label>
                 <Input
@@ -351,7 +340,6 @@ const RegistrationForm = () => {
                 />
               </div>
               
-              {/* Position in Company field */}
               <div>
                 <Label htmlFor="position">Position in Company <span className="text-red-500">*</span></Label>
                 <Input
@@ -365,7 +353,6 @@ const RegistrationForm = () => {
                 />
               </div>
               
-              {/* Business Email field */}
               <div>
                 <Label htmlFor="email">Business Email <span className="text-red-500">*</span></Label>
                 <Input
@@ -379,7 +366,6 @@ const RegistrationForm = () => {
                 />
               </div>
               
-              {/* Business Phone field */}
               <div>
                 <Label htmlFor="phone">Business Phone <span className="text-red-500">*</span></Label>
                 <Input
@@ -392,9 +378,24 @@ const RegistrationForm = () => {
                   className="mt-1"
                 />
               </div>
+
+              <div>
+                <Label htmlFor="password">Password <span className="text-red-500">*</span></Label>
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  placeholder="Create a secure password"
+                  value={formData.password}
+                  onChange={(e) => updateFormData('password', e.target.value)}
+                  className="mt-1"
+                />
+                <p className="text-xs text-construction-slate mt-1">
+                  Password must be at least 8 characters long
+                </p>
+              </div>
             </div>
             
-            {/* Navigation buttons for Step 2 */}
             <div className="flex justify-between pt-4">
               <Button 
                 type="button" 
@@ -427,7 +428,6 @@ const RegistrationForm = () => {
             exit="exit"
             className="space-y-6"
           >
-            {/* Verification information box */}
             <div className="bg-construction-blue/5 rounded-xl p-6 border border-construction-blue/10">
               <h3 className="font-bold text-lg mb-4 text-construction-black">Verification Process</h3>
               <p className="text-sm text-construction-slate mb-4">
@@ -449,7 +449,6 @@ const RegistrationForm = () => {
               </ul>
             </div>
             
-            {/* Terms acceptance checkbox */}
             <div className="bg-white p-6 rounded-xl border border-construction-gray">
               <label className="flex items-start cursor-pointer">
                 <input
@@ -466,7 +465,6 @@ const RegistrationForm = () => {
               </label>
             </div>
             
-            {/* Navigation and submission buttons for Step 3 */}
             <div className="flex justify-between pt-4">
               <Button 
                 type="button" 
@@ -479,10 +477,10 @@ const RegistrationForm = () => {
               </Button>
               <Button 
                 type="submit"
-                disabled={!formData.acceptTerms}
+                disabled={!formData.acceptTerms || isSubmitting}
                 className="bg-construction-blue hover:bg-construction-blue/90"
               >
-                Complete Registration
+                {isSubmitting ? "Registering..." : "Complete Registration"}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>

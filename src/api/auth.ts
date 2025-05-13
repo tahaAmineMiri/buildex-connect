@@ -1,74 +1,84 @@
-
+// src/api/auth.ts
 import apiClient from './axios';
 import { AUTH } from './endpoints';
 
-interface LoginParams {
+interface LoginRequest {
   email: string;
   password: string;
 }
 
-interface RegisterParams {
-  name: string;
-  email: string;
-  password: string;
-  role: 'buyer' | 'seller';
+interface RegisterBuyerRequest {
+  userEmail: string;
+  userPassword: string;
+  userFullName: string;
+  userPosition: string;
+  userBusinessPhone: string;
+  userRole: 'BUYER';
 }
 
-interface AuthResponse {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    role: 'buyer' | 'seller' | 'admin';
-  };
+interface RegisterSellerRequest {
+  userEmail: string;
+  userPassword: string;
+  userFullName: string;
+  userPosition: string;
+  userBusinessPhone: string;
+  userRole: 'SELLER';
+}
+
+export interface AuthResponse {
   token: string;
+  expiresIn: number;
+  user: {
+    userId: number;
+    userEmail: string;
+    userFullName: string;
+    userPosition: string;
+    userBusinessPhone: string;
+    userIsVerified: boolean;
+  };
 }
 
-// For now, we'll implement mock versions that match our current functionality
-export const login = async ({ email, password }: LoginParams): Promise<AuthResponse> => {
-  // In a real application, this would be:
-  // const response = await apiClient.post(AUTH.LOGIN, { email, password });
-  // return response.data;
-  
-  // Mock implementation to match the current functionality:
-  console.log("Logging in with:", email, password);
-  
-  return {
-    user: {
-      id: "1",
-      name: "John Doe",
-      email: email,
-      role: "buyer"
-    },
-    token: "mock-auth-token"
-  };
+export const login = async (credentials: LoginRequest): Promise<AuthResponse> => {
+  try {
+    const response = await apiClient.post(AUTH.LOGIN, {
+      email: credentials.email,
+      password: credentials.password
+    });
+    return response.data as AuthResponse;
+  } catch (error) {
+    console.error("Login error:", error);
+    throw error;
+  }
 };
 
-export const register = async ({ name, email, password, role }: RegisterParams): Promise<AuthResponse> => {
-  // In a real application, this would be:
-  // const response = await apiClient.post(AUTH.REGISTER, { name, email, password, role });
-  // return response.data;
-  
-  // Mock implementation to match current functionality:
-  console.log("Registering:", { name, email, password, role });
-  
-  return {
-    user: {
-      id: "2",
-      name: name,
-      email: email,
-      role: role
-    },
-    token: "mock-auth-token"
-  };
+export const registerBuyer = async (data: Omit<RegisterBuyerRequest, 'userRole'>): Promise<AuthResponse> => {
+  try {
+    const buyerRequest = {
+      ...data,
+      userRole: 'BUYER'
+    };
+    const response = await apiClient.post(AUTH.REGISTER_BUYER, buyerRequest);
+    return response.data as AuthResponse;
+  } catch (error) {
+    console.error("Buyer registration error:", error);
+    throw error;
+  }
+};
+
+export const registerSeller = async (data: Omit<RegisterSellerRequest, 'userRole'>): Promise<AuthResponse> => {
+  try {
+    const sellerRequest = {
+      ...data,
+      userRole: 'SELLER'
+    };
+    const response = await apiClient.post(AUTH.REGISTER_SELLER, sellerRequest);
+    return response.data as AuthResponse;
+  } catch (error) {
+    console.error("Seller registration error:", error);
+    throw error;
+  }
 };
 
 export const logout = async (): Promise<void> => {
-  // In a real application, this would be:
-  // await apiClient.post(AUTH.LOGOUT);
-  // localStorage.removeItem('token');
-  
-  // Mock implementation:
-  console.log("Logging out");
   localStorage.removeItem('token');
 };
