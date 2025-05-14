@@ -1,4 +1,4 @@
-// src/api/endpoints.ts
+// src/api/endpoints.ts (updated with COMPANIES endpoints)
 // API endpoints constants
 
 // Auth endpoints
@@ -57,4 +57,15 @@ export const USERS = {
     UPDATE: (id: string) => `/sellers/${id}`,
     DELETE: (id: string) => `/sellers/${id}`,
   },
+};
+
+// Company endpoints
+export const COMPANIES = {
+  GET_ALL: '/companies',
+  GET_BY_ID: (id: string) => `/companies/${id}`,
+  GET_BY_USER: (userId: string) => `/companies/user/${userId}`,
+  CREATE_FOR_USER: (userId: string) => `/companies/user/${userId}`,
+  UPDATE: (id: string) => `/companies/${id}`,
+  DELETE: (id: string) => `/companies/${id}`,
+  UPDATE_STATUS: (id: string) => `/companies/${id}/status`,
 };

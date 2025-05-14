@@ -1,4 +1,4 @@
-// src/components/features/auth/components/forms/RegistrationForm.tsx
+// src/components/features/auth/components/forms/RegistrationForm.tsx (modular approach)
 import { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -10,6 +10,15 @@ import { Textarea } from '@/components/common/ui/textarea';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/common/ui/select';
 import { useAuth } from '@/providers/AuthProvider';
 import { toast } from 'sonner';
+import { createCompany, CompanyRequest } from '@/api/company';
+
+interface UserFormData {
+  userEmail: string;
+  userPassword: string;
+  userFullName: string;
+  userPosition: string;
+  userBusinessPhone: string;
+}
 
 interface FormData {
   // Company Information
@@ -74,6 +83,17 @@ const RegistrationForm = () => {
     }
   };
   
+  // Map form data to company request format
+  const mapToCompanyRequest = (): CompanyRequest => {
+    return {
+      companyName: formData.companyName,
+      companyAddress: formData.address,
+      companyIndustryCategory: formData.industry,
+      companyCommercialRegister: formData.registrationNumber,
+      companyFiscalIdentifier: formData.taxId || undefined
+    };
+  };
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -85,8 +105,8 @@ const RegistrationForm = () => {
     setIsSubmitting(true);
     
     try {
-      // Prepare registration data
-      const userData = {
+      // Step 1: Prepare user registration data
+      const userData: UserFormData = {
         userEmail: formData.email,
         userPassword: formData.password,
         userFullName: formData.fullName,
@@ -95,14 +115,27 @@ const RegistrationForm = () => {
       };
       
       // Register based on role
+      let authResponse;
       if (role === 'buyer') {
-        await registerAsBuyer(userData);
-        toast.success("Buyer registration successful!");
-        navigate('/buyer-dashboard');
+        authResponse = await registerAsBuyer(userData);
       } else {
-        await registerAsSeller(userData);
-        toast.success("Seller registration successful!");
-        navigate('/seller-dashboard');
+        authResponse = await registerAsSeller(userData);
+      }
+      
+      // Step 2: Create company profile using the user ID
+      if (authResponse) {
+        try {
+          // Create company using the user ID
+          const companyData = mapToCompanyRequest();
+          await createCompany(authResponse.user.userId.toString(), companyData);
+          
+          toast.success(`${role === 'buyer' ? 'Buyer' : 'Seller'} registration successful!`);
+          navigate(role === 'buyer' ? '/buyer-dashboard' : '/seller-dashboard');
+        } catch (companyError) {
+          console.error("Company creation error:", companyError);
+          toast.warning("User registered but company details couldn't be saved. Please update your profile later.");
+          navigate(role === 'buyer' ? '/buyer-dashboard' : '/seller-dashboard');
+        }
       }
     } catch (error) {
       console.error("Registration error:", error);
@@ -306,7 +339,6 @@ const RegistrationForm = () => {
               <Button 
                 type="button" 
                 onClick={nextStep}
-                // src/components/features/auth/components/forms/RegistrationForm.tsx (continued)
                 className="w-full bg-construction-blue hover:bg-construction-blue/90"
               >
                 Continue
