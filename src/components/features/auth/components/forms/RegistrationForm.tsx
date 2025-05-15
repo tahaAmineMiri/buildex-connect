@@ -1,5 +1,5 @@
 // src/components/features/auth/components/forms/RegistrationForm.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, CheckCircle, ChevronRight, Building, User, FileText } from 'lucide-react';
@@ -46,6 +46,7 @@ const RegistrationForm = () => {
   const navigate = useNavigate();
   
   const [currentStep, setCurrentStep] = useState(1);
+  const [registrationComplete, setRegistrationComplete] = useState(false);
   
   const [formData, setFormData] = useState<FormData>({
     companyName: '',
@@ -63,6 +64,21 @@ const RegistrationForm = () => {
   });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Effect to handle redirection after successful registration
+  useEffect(() => {
+    let redirectTimer: NodeJS.Timeout;
+    
+    if (registrationComplete) {
+      redirectTimer = setTimeout(() => {
+        navigate('/auth');
+      }, 2000); // Give more time for toast to be visible
+    }
+    
+    return () => {
+      if (redirectTimer) clearTimeout(redirectTimer);
+    };
+  }, [registrationComplete, navigate]);
   
   const updateFormData = (field: keyof FormData, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -115,35 +131,45 @@ const RegistrationForm = () => {
       
       // Register based on role but DON'T automatically log in
       let authResponse;
-      if (role === 'buyer') {
-        // Direct API call without using useAuth
-        authResponse = await registerBuyer(userData);
-      } else {
-        // Direct API call without using useAuth
-        authResponse = await registerSeller(userData);
-      }
-      
-      if (authResponse && authResponse.user) {
+      try {
+        if (role === 'buyer') {
+          // Direct API call without using useAuth
+          authResponse = await registerBuyer(userData);
+        } else {
+          // Direct API call without using useAuth
+          authResponse = await registerSeller(userData);
+        }
+        
+        console.log("Registration API response:", authResponse);
+        
+        // Check if we have a valid user ID in the response
+        // In this case, the user ID is directly in the response (not nested in a user object)
+        if (!authResponse || !authResponse.userId) {
+          throw new Error("Invalid response from registration API");
+        }
+        
+        // Step 2: Create company using the user ID
         try {
-          // Create company using the user ID
           const companyData = mapToCompanyRequest();
-          await createCompany(authResponse.user.userId.toString(), companyData);
+          // Use the userId directly from the response
+          const companyResponse = await createCompany(authResponse.userId.toString(), companyData);
+          console.log("Company creation response:", companyResponse);
           
+          // Registration complete - show success toast
           toast.success(`${role === 'buyer' ? 'Buyer' : 'Seller'} registration successful! Please sign in to continue.`);
-          
-          // Redirect to sign-in page instead of dashboard
-          navigate('/auth');
+          setRegistrationComplete(true);
         } catch (companyError) {
           console.error("Company creation error:", companyError);
           toast.warning("User registered but company details couldn't be saved. You can update your profile after signing in.");
-          
-          // Still redirect to sign-in page
-          navigate('/auth');
+          setRegistrationComplete(true);
         }
+      } catch (registrationError) {
+        console.error("Registration error:", registrationError);
+        toast.error("Registration failed. Please try again.");
       }
     } catch (error) {
-      console.error("Registration error:", error);
-      toast.error("Registration failed. Please try again.");
+      console.error("Outer error:", error);
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -166,6 +192,18 @@ const RegistrationForm = () => {
       }
     }
   };
+  
+  // If registration is complete, show a success message while waiting for redirect
+  if (registrationComplete) {
+    return (
+      <div className="max-w-3xl mx-auto px-6 py-12 text-center">
+        <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+        <h2 className="text-2xl font-bold mb-2">Registration Successful!</h2>
+        <p className="mb-4">Your account has been created successfully.</p>
+        <p className="text-construction-slate">You will be redirected to the sign-in page shortly...</p>
+      </div>
+    );
+  }
   
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
