@@ -12,7 +12,7 @@ const SignInForm = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -25,7 +25,23 @@ const SignInForm = () => {
       toast.success("You have successfully signed in");
       
       // Navigate to appropriate dashboard based on user role
-      navigate("/"); // After first login, we'll redirect based on role
+      if (user?.userRole) {
+        switch (user.userRole) {
+          case "BUYER":
+            navigate("/buyer-dashboard");
+            break;
+          case "SELLER":
+            navigate("/seller-dashboard");
+            break;
+          case "ADMIN":
+            navigate("/admin-dashboard");
+            break;
+          default:
+            navigate("/"); // Fallback to home page
+        }
+      } else {
+        navigate("/"); // Default to home if no role found
+      }
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Invalid email or password");

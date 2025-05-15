@@ -1,4 +1,4 @@
-// src/components/features/auth/components/forms/RegistrationForm.tsx (modular approach)
+// src/components/features/auth/components/forms/RegistrationForm.tsx
 import { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -8,8 +8,8 @@ import { Input } from '@/components/common/ui/input';
 import { Label } from '@/components/common/ui/label';
 import { Textarea } from '@/components/common/ui/textarea';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/common/ui/select';
-import { useAuth } from '@/providers/AuthProvider';
 import { toast } from 'sonner';
+import { registerBuyer, registerSeller } from '@/api/auth';
 import { createCompany, CompanyRequest } from '@/api/company';
 
 interface UserFormData {
@@ -62,7 +62,6 @@ const RegistrationForm = () => {
     acceptTerms: false
   });
   
-  const { registerAsBuyer, registerAsSeller } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const updateFormData = (field: keyof FormData, value: string | boolean) => {
@@ -114,27 +113,32 @@ const RegistrationForm = () => {
         userBusinessPhone: formData.phone
       };
       
-      // Register based on role
+      // Register based on role but DON'T automatically log in
       let authResponse;
       if (role === 'buyer') {
-        authResponse = await registerAsBuyer(userData);
+        // Direct API call without using useAuth
+        authResponse = await registerBuyer(userData);
       } else {
-        authResponse = await registerAsSeller(userData);
+        // Direct API call without using useAuth
+        authResponse = await registerSeller(userData);
       }
       
-      // Step 2: Create company profile using the user ID
-      if (authResponse) {
+      if (authResponse && authResponse.user) {
         try {
           // Create company using the user ID
           const companyData = mapToCompanyRequest();
           await createCompany(authResponse.user.userId.toString(), companyData);
           
-          toast.success(`${role === 'buyer' ? 'Buyer' : 'Seller'} registration successful!`);
-          navigate(role === 'buyer' ? '/buyer-dashboard' : '/seller-dashboard');
+          toast.success(`${role === 'buyer' ? 'Buyer' : 'Seller'} registration successful! Please sign in to continue.`);
+          
+          // Redirect to sign-in page instead of dashboard
+          navigate('/auth');
         } catch (companyError) {
           console.error("Company creation error:", companyError);
-          toast.warning("User registered but company details couldn't be saved. Please update your profile later.");
-          navigate(role === 'buyer' ? '/buyer-dashboard' : '/seller-dashboard');
+          toast.warning("User registered but company details couldn't be saved. You can update your profile after signing in.");
+          
+          // Still redirect to sign-in page
+          navigate('/auth');
         }
       }
     } catch (error) {
