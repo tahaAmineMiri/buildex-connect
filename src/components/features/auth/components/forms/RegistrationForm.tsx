@@ -70,9 +70,10 @@ const RegistrationForm = () => {
     let redirectTimer: NodeJS.Timeout;
     
     if (registrationComplete) {
+      // Significantly increase the delay to 5 seconds
       redirectTimer = setTimeout(() => {
         navigate('/auth');
-      }, 2000); // Give more time for toast to be visible
+      }, 5000); // 5 seconds instead of 3.5 seconds
     }
     
     return () => {
@@ -119,6 +120,9 @@ const RegistrationForm = () => {
     
     setIsSubmitting(true);
     
+    // Show a loading toast
+    const loadingToastId = toast.loading("Processing your registration...");
+    
     try {
       // Step 1: Prepare user registration data
       const userData: UserFormData = {
@@ -129,9 +133,9 @@ const RegistrationForm = () => {
         userBusinessPhone: formData.phone
       };
       
-      // Register based on role but DON'T automatically log in
-      let authResponse;
       try {
+        // Register based on role but DON'T automatically log in
+        let authResponse;
         if (role === 'buyer') {
           // Direct API call without using useAuth
           authResponse = await registerBuyer(userData);
@@ -140,35 +144,53 @@ const RegistrationForm = () => {
           authResponse = await registerSeller(userData);
         }
         
+        // Dismiss loading toast
+        toast.dismiss(loadingToastId);
+        
         console.log("Registration API response:", authResponse);
+        console.log("Auth response full object:", JSON.stringify(authResponse, null, 2));
+        console.log("User ID from response:", authResponse?.user?.userId);
         
         // Check if we have a valid user ID in the response
-        // In this case, the user ID is directly in the response (not nested in a user object)
-        if (!authResponse || !authResponse.userId) {
+        if (!authResponse || !authResponse.user || !authResponse.user.userId) {
           throw new Error("Invalid response from registration API");
         }
         
         // Step 2: Create company using the user ID
         try {
           const companyData = mapToCompanyRequest();
-          // Use the userId directly from the response
-          const companyResponse = await createCompany(authResponse.userId.toString(), companyData);
+          // Use the userId from the nested user object
+          const companyResponse = await createCompany(authResponse.user.userId.toString(), companyData);
           console.log("Company creation response:", companyResponse);
           
           // Registration complete - show success toast
-          toast.success(`${role === 'buyer' ? 'Buyer' : 'Seller'} registration successful! Please sign in to continue.`);
-          setRegistrationComplete(true);
+          toast.success(`${role === 'buyer' ? 'Buyer' : 'Seller'} registration successful! Please sign in to continue.`, {
+            duration: 5000, // Explicitly set toast duration to 5 seconds
+          });
+          
+          // Add a small delay before setting registrationComplete
+          setTimeout(() => {
+            setRegistrationComplete(true);
+          }, 500);
         } catch (companyError) {
           console.error("Company creation error:", companyError);
-          toast.warning("User registered but company details couldn't be saved. You can update your profile after signing in.");
-          setRegistrationComplete(true);
+          toast.error("Registration completed but company details couldn't be saved. You can update your profile after signing in.", {
+            duration: 5000, // Explicitly set toast duration to 5 seconds
+          });
+          
+          // Add a small delay before setting registrationComplete
+          setTimeout(() => {
+            setRegistrationComplete(true);
+          }, 500);
         }
       } catch (registrationError) {
         console.error("Registration error:", registrationError);
+        toast.dismiss(loadingToastId);
         toast.error("Registration failed. Please try again.");
       }
     } catch (error) {
       console.error("Outer error:", error);
+      toast.dismiss(loadingToastId);
       toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -554,8 +576,17 @@ const RegistrationForm = () => {
                 disabled={!formData.acceptTerms || isSubmitting}
                 className="bg-construction-blue hover:bg-construction-blue/90"
               >
-                {isSubmitting ? "Registering..." : "Complete Registration"}
-                <ArrowRight className="ml-2 h-4 w-4" />
+                {isSubmitting ? (
+                  <>
+                    <div className="animate-spin mr-2 h-4 w-4 border-2 border-white border-opacity-20 border-t-white rounded-full" />
+                    Creating your account...
+                  </>
+                ) : (
+                  <>
+                    Complete Registration
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </>
+                )}
               </Button>
             </div>
           </motion.div>

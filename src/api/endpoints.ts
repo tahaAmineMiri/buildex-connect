@@ -14,7 +14,7 @@ export const PRODUCTS = {
   GET_BY_ID: (id: string) => `/products/${id}`,
   GET_BY_CATEGORY: (category: string) => `/products/category/${category}`,
   GET_BY_SELLER: (sellerId: string) => `/products/seller/${sellerId}`,
-  CREATE: '/products/seller',
+  CREATE: '/products/seller', 
   UPDATE: (id: string) => `/products/${id}`,
   DELETE: (id: string) => `/products/${id}`,
   UPDATE_STOCK: (id: string) => `/products/${id}/stock`,
@@ -59,12 +59,13 @@ export const USERS = {
   },
 };
 
-// Company endpoints
+// src/api/endpoints.ts
+// Verify this part to ensure the endpoint is correctly defined
 export const COMPANIES = {
   GET_ALL: '/companies',
   GET_BY_ID: (id: string) => `/companies/${id}`,
   GET_BY_USER: (userId: string) => `/companies/user/${userId}`,
-  CREATE_FOR_USER: (userId: string) => `/companies/user/${userId}`,
+  CREATE_FOR_USER: (userId: string) => `/companies/user/${userId}`, // Make sure this matches the backend endpoint
   UPDATE: (id: string) => `/companies/${id}`,
   DELETE: (id: string) => `/companies/${id}`,
   UPDATE_STATUS: (id: string) => `/companies/${id}/status`,

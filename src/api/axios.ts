@@ -26,10 +26,24 @@ apiClient.interceptors.response.use(
     // Global error handling
     const { response } = error;
     
-    if (response && response.status === 401) {
-      // Handle unauthorized access (redirect to login, etc)
-      localStorage.removeItem('token');
-      window.location.href = '/auth';
+    if (response) {
+      // Log detailed error information for debugging
+      console.error('API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        data: response.data,
+        url: response.config.url,
+        method: response.config.method
+      });
+      
+      if (response.status === 401) {
+        // Handle unauthorized access (redirect to login, etc)
+        localStorage.removeItem('token');
+        window.location.href = '/auth';
+      }
+    } else {
+      // Network error or request cancelled
+      console.error('Network Error:', error.message);
     }
     
     return Promise.reject(error);

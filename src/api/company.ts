@@ -37,11 +37,30 @@ export interface CompanyResponse {
  */
 export const createCompany = async (userId: string, companyData: CompanyRequest): Promise<CompanyResponse> => {
   try {
+    console.log("Creating company for user ID:", userId);
+    console.log("Company data:", JSON.stringify(companyData, null, 2));
+    console.log("API endpoint:", COMPANIES.CREATE_FOR_USER(userId));
+    
     const response = await apiClient.post(COMPANIES.CREATE_FOR_USER(userId), companyData);
+    console.log("Company creation successful, response:", response.data);
     return response.data as CompanyResponse;
-  } catch (error) {
-    console.error("Error creating company:", error);
-    throw error;
+  } catch (error: any) {
+    console.error("Error creating company for user ID:", userId);
+    console.error("Request data:", JSON.stringify(companyData, null, 2));
+    
+    if (error.response) {
+      // Log detailed error info
+      console.error("Error response status:", error.response.status);
+      console.error("Error response data:", error.response.data);
+      console.error("Error response headers:", error.response.headers);
+      throw new Error(`Company creation failed (${error.response.status}): ${JSON.stringify(error.response.data)}`);
+    } else if (error.request) {
+      console.error("No response received:", error.request);
+      throw new Error('Company creation failed: No response received from server');
+    } else {
+      console.error("Request setup error:", error.message);
+      throw new Error(`Company creation failed: ${error.message}`);
+    }
   }
 };
 
