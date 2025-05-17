@@ -70,10 +70,9 @@ const RegistrationForm = () => {
     let redirectTimer: NodeJS.Timeout;
     
     if (registrationComplete) {
-      // Significantly increase the delay to 5 seconds
       redirectTimer = setTimeout(() => {
         navigate('/auth');
-      }, 5000); // 5 seconds instead of 3.5 seconds
+      }, 2000); // Give more time for toast to be visible
     }
     
     return () => {
@@ -101,17 +100,23 @@ const RegistrationForm = () => {
   
   // Map form data to company request format
   const mapToCompanyRequest = (): CompanyRequest => {
-    return {
+    const companyData = {
       companyName: formData.companyName,
       companyAddress: formData.address,
       companyIndustryCategory: formData.industry,
       companyCommercialRegister: formData.registrationNumber,
       companyFiscalIdentifier: formData.taxId || undefined
     };
+    
+    console.log('🔍 Company Request Data:', companyData);
+    return companyData;
   };
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    console.log('🚀 Starting registration process...');
+    console.log('📝 Form Data:', formData);
     
     if (!formData.acceptTerms) {
       toast.error("You must accept the terms and conditions");
@@ -119,9 +124,6 @@ const RegistrationForm = () => {
     }
     
     setIsSubmitting(true);
-    
-    // Show a loading toast
-    const loadingToastId = toast.loading("Processing your registration...");
     
     try {
       // Step 1: Prepare user registration data
@@ -133,9 +135,12 @@ const RegistrationForm = () => {
         userBusinessPhone: formData.phone
       };
       
+      console.log('👤 User Registration Data:', userData);
+      
+      // Register based on role but DON'T automatically log in
+      let authResponse;
       try {
-        // Register based on role but DON'T automatically log in
-        let authResponse;
+        console.log(`🔐 Attempting to register as ${role}...`);
         if (role === 'buyer') {
           // Direct API call without using useAuth
           authResponse = await registerBuyer(userData);
@@ -144,53 +149,133 @@ const RegistrationForm = () => {
           authResponse = await registerSeller(userData);
         }
         
-        // Dismiss loading toast
-        toast.dismiss(loadingToastId);
-        
-        console.log("Registration API response:", authResponse);
-        console.log("Auth response full object:", JSON.stringify(authResponse, null, 2));
-        console.log("User ID from response:", authResponse?.user?.userId);
+        console.log('✅ Registration API Response:', JSON.stringify(authResponse, null, 2));
+        console.log('🔑 Auth Response Type:', typeof authResponse);
+        console.log('🔑 Auth Response has user property:', authResponse?.user ? 'Yes' : 'No');
+        console.log('🔑 User structure:', authResponse?.user ? JSON.stringify(authResponse.user, null, 2) : 'No user property');
         
         // Check if we have a valid user ID in the response
-        if (!authResponse || !authResponse.user || !authResponse.user.userId) {
-          throw new Error("Invalid response from registration API");
+        if (!authResponse) {
+          console.error('❌ Auth response is null or undefined');
+          throw new Error("Registration API returned no data");
+        }
+        
+        // Inspect the exact structure to determine where userId is located
+        let userId;
+        console.log('🔍 Inspecting authResponse for userId...');
+        
+        if (authResponse.user && authResponse.user.userId) {
+          userId = authResponse.user.userId;
+          console.log('✅ Found userId in authResponse.user.userId:', userId);
+        } else if (authResponse.userId) {
+          userId = authResponse.userId;
+          console.log('✅ Found userId directly in authResponse.userId:', userId);
+        } else {
+          // Try to find userId at any level using recursion
+          const findUserId = (obj: any): number | null => {
+            if (!obj || typeof obj !== 'object') return null;
+            
+            if (obj.userId !== undefined) return obj.userId;
+            
+            for (const key in obj) {
+              if (typeof obj[key] === 'object') {
+                const found = findUserId(obj[key]);
+                if (found) return found;
+              }
+            }
+            
+            return null;
+          };
+          
+          userId = findUserId(authResponse);
+          if (userId) {
+            console.log('✅ Found userId in nested structure:', userId);
+          } else {
+            console.error('❌ Could not find userId anywhere in the response');
+            console.error('📊 Full auth response:', authResponse);
+            throw new Error("User ID not found in registration response");
+          }
         }
         
         // Step 2: Create company using the user ID
         try {
+          console.log('🏢 Creating company for user ID:', userId);
           const companyData = mapToCompanyRequest();
-          // Use the userId from the nested user object
-          const companyResponse = await createCompany(authResponse.user.userId.toString(), companyData);
-          console.log("Company creation response:", companyResponse);
+          
+          // Log API call details
+          console.log(`🌐 API Call: createCompany(${userId.toString()}, companyData)`);
+          
+          // Try POST request directly using fetch for debugging
+          console.log('🧪 Testing direct fetch to API endpoint...');
+          const apiUrl = `/api/v1/companies/user/${userId}`;
+          console.log(`🔗 API URL: ${apiUrl}`);
+          
+          try {
+            const fetchResponse = await fetch(apiUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authResponse.token || ''}`
+              },
+              body: JSON.stringify(companyData)
+            });
+            
+            console.log('📡 Fetch Response Status:', fetchResponse.status);
+            const responseText = await fetchResponse.text();
+            console.log('📡 Fetch Response Body:', responseText);
+            
+            // Try to parse as JSON if possible
+            try {
+              const responseData = JSON.parse(responseText);
+              console.log('📡 Fetch Response JSON:', responseData);
+            } catch (e) {
+              console.log('📡 Response is not valid JSON');
+            }
+            
+            if (!fetchResponse.ok) {
+              console.error('❌ Direct fetch failed with status:', fetchResponse.status);
+              throw new Error(`API request failed with status ${fetchResponse.status}`);
+            }
+          } catch (fetchError) {
+            console.error('❌ Direct fetch error:', fetchError);
+          }
+          
+          // Use the original API function
+          console.log('🏢 Using createCompany API function...');
+          const companyResponse = await createCompany(userId.toString(), companyData);
+          console.log('✅ Company creation response:', companyResponse);
           
           // Registration complete - show success toast
-          toast.success(`${role === 'buyer' ? 'Buyer' : 'Seller'} registration successful! Please sign in to continue.`, {
-            duration: 5000, // Explicitly set toast duration to 5 seconds
-          });
+          toast.success(`${role === 'buyer' ? 'Buyer' : 'Seller'} registration successful! Please sign in to continue.`);
+          setRegistrationComplete(true);
+        } catch (companyError: any) {
+          console.error('❌ Company creation error:', companyError);
+          console.error('❌ Error details:', companyError?.message);
           
-          // Add a small delay before setting registrationComplete
-          setTimeout(() => {
-            setRegistrationComplete(true);
-          }, 500);
-        } catch (companyError) {
-          console.error("Company creation error:", companyError);
-          toast.error("Registration completed but company details couldn't be saved. You can update your profile after signing in.", {
-            duration: 5000, // Explicitly set toast duration to 5 seconds
-          });
+          // If we have response details from axios, log them
+          if (companyError?.response) {
+            console.error('❌ Error response status:', companyError.response.status);
+            console.error('❌ Error response data:', companyError.response.data);
+          }
           
-          // Add a small delay before setting registrationComplete
-          setTimeout(() => {
-            setRegistrationComplete(true);
-          }, 500);
+          toast.warning("User registered but company details couldn't be saved. You can update your profile after signing in.");
+          setRegistrationComplete(true);
         }
-      } catch (registrationError) {
-        console.error("Registration error:", registrationError);
-        toast.dismiss(loadingToastId);
+      } catch (registrationError: any) {
+        console.error('❌ Registration error:', registrationError);
+        console.error('❌ Error details:', registrationError?.message);
+        
+        // If we have response details from axios, log them
+        if (registrationError?.response) {
+          console.error('❌ Error response status:', registrationError.response.status);
+          console.error('❌ Error response data:', registrationError.response.data);
+        }
+        
         toast.error("Registration failed. Please try again.");
       }
-    } catch (error) {
-      console.error("Outer error:", error);
-      toast.dismiss(loadingToastId);
+    } catch (error: any) {
+      console.error('❌ Outer error:', error);
+      console.error('❌ Error details:', error?.message);
       toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -576,17 +661,8 @@ const RegistrationForm = () => {
                 disabled={!formData.acceptTerms || isSubmitting}
                 className="bg-construction-blue hover:bg-construction-blue/90"
               >
-                {isSubmitting ? (
-                  <>
-                    <div className="animate-spin mr-2 h-4 w-4 border-2 border-white border-opacity-20 border-t-white rounded-full" />
-                    Creating your account...
-                  </>
-                ) : (
-                  <>
-                    Complete Registration
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </>
-                )}
+                {isSubmitting ? "Registering..." : "Complete Registration"}
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </motion.div>
